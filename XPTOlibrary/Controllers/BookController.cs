@@ -19,15 +19,78 @@ namespace XPTOlibrary.Controllers
         }
         //GET
         public IActionResult Create()
+
         {
             return View();
         }
         //POST
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create()
+        public IActionResult Create(BookInformation obj)
         {
+            if (ModelState.IsValid)
+            {
+                _db.BookInformation.Add(obj);
+                _db.SaveChanges();
+                TempData["success"] = "Book added successfully";
+                return RedirectToAction("Index");
+            }
+            return View(obj);
+        }
+        public IActionResult Edit(int? id)
+        {
+            if(id == null|| id == 0)
+            {
+                return NotFound();
+            }
+            var BookInformationFromDB = _db.BookInformation.FirstOrDefault(x => x.BookISBN == id);
             return View();
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(BookInformation obj)
+        {
+            if (ModelState.IsValid)
+            {
+                _db.BookInformation.Update(obj);
+                _db.SaveChanges();
+                TempData["success"] = "Book updated successfully";
+                return RedirectToAction("Index");
+            }
+            return View(obj);
+        }
+        public IActionResult Delete(int? id)
+        {
+            if (id == null || id == 0)
+            {
+                return NotFound();
+            }
+            var BookInformationFromDbFirst = _db.BookInformation.FirstOrDefault(u => u.BookISBN == id);
+
+            if (BookInformationFromDbFirst == null)
+            {
+                return NotFound();
+            }
+
+            return View(BookInformationFromDbFirst);
+        }
+
+        //POST
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public IActionResult DeletePOST(int? id)
+        {
+            var obj = _db.BookInformation.FirstOrDefault(u => u.BookISBN == id);
+            if (obj == null)
+            {
+                return NotFound();
+            }
+
+            _db.BookInformation.Remove(obj);
+            _db.SaveChanges();
+            TempData["success"] = "Book deleted successfully";
+            return RedirectToAction("Index");
+
         }
     }
 }

@@ -75,18 +75,14 @@ namespace XPTOlibrary.DataAccess.Migrations
             modelBuilder.Entity("XPTOlibrary.Models.BookInformation", b =>
                 {
                     b.Property<int>("BookISBN")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BookISBN"), 1L, 1);
 
                     b.Property<string>("BookName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<byte[]>("Cover")
-                        .IsRequired()
-                        .HasColumnType("varbinary(max)");
+                    b.Property<int?>("Cover")
+                        .HasColumnType("int");
 
                     b.Property<int>("PublisherId")
                         .HasColumnType("int");

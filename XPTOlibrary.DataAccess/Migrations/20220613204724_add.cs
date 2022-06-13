@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace XPTOlibrary.DataAccess.Migrations
 {
-    public partial class AddTablesToDB : Migration
+    public partial class add : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -101,11 +101,10 @@ namespace XPTOlibrary.DataAccess.Migrations
                 name: "BookInformation",
                 columns: table => new
                 {
-                    BookISBN = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    BookISBN = table.Column<int>(type: "int", nullable: false),
                     BookName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PublisherId = table.Column<int>(type: "int", nullable: false),
-                    Cover = table.Column<byte[]>(type: "varbinary(max)", nullable: false)
+                    Cover = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {

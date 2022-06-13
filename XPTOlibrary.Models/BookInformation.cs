@@ -6,6 +6,7 @@ namespace XPTOlibrary.Models
     public class BookInformation
     {
         [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.None)]
         public int BookISBN { get; set; }
         [Required]
         public string BookName { get; set; }
@@ -14,6 +15,6 @@ namespace XPTOlibrary.Models
         public int PublisherId { get; set; }
         [ForeignKey("PublisherId")]
         public Publisher Publisher { get; set; }
-        public Byte[] Cover { get; set; }
+        public System.Nullable<int> Cover { get; set; }
     }
 }

@@ -23,7 +23,7 @@ namespace XPTOlibrary.Models
         [ForeignKey("CoreId")]
         public Cores Cores { get; set; }
         [Required]
-        public DateTime DateBorrow { get; set; }
+        public DateTime DateBorrow { get; set; } = DateTime.Now;
         public DateTime DateReturn { get; set; }
     }
 }
