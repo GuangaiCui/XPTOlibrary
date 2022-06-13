@@ -1,0 +1,38 @@
+﻿@model IEnumerable<BookInformation>
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="container p-3">
+    <div class="row pt-4">
+        <div class="col-6">
+            <h2 class="text-primary">Book List</h2>
+		</div>
+        <div class="col-6 text-end">
+            <a asp-controller="Book" asp-action="Create" class="btn btn-primary">
+               <i class="bi bi-plus-circle"></i> &nbsp; Add New Book
+			</a>
+		</div>
+	</div>
+    <br /><br />
+
+<table class="table table-bordered table-striped" style="width:100%">
+    <thead>
+        <th>BookISBN</th>
+        <th>Book Title</th>
+        <th>Publisher</th>
+        <th>Cover</th>
+    </thead>
+    <tbody>
+        @foreach(var obj in Model)
+        {
+            <tr>
+                <td>@obj.BookISBN</td>
+                <td>@obj.BookName</td>
+                <td>@obj.Publisher</td>
+                <td>@obj.Cover</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
