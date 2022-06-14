@@ -9,6 +9,7 @@ namespace XPTOlibrary.DataAccess.Repository.IRepository
     public interface IUnitofWork
     {
         IBookInformationRepository BookInformation { get; }
+        IPublisherRepository Publisher { get; }
 
 
         void Save();

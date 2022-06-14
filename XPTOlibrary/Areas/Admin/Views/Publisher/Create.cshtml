@@ -1,0 +1,32 @@
+﻿@model Publisher
+<form method="post" asp-action="Create">
+    <div class="border p-3 mt-4">
+        <div class="row pb-2">
+            <h2 class="text-primary">Add New Publisher</h2>
+            <hr />
+        </div>
+        @*<div asp-validation-summary="All"></div>*@
+        <div class="mb-3">
+            <label asp-for="PublisherId"></label>
+            <input asp-for="PublisherId" class="form-control" />
+            <span asp-validation-for="PublisherId" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="PublisherName"></label>
+            <input asp-for="PublisherName" class="form-control" />
+            <span asp-validation-for="PublisherName"
+            class="text-danger"></span>
+        </div>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:150px">Create</button>
+        <a asp-controller="Publisher" asp-action="Index" class="btn btn-secondary" style="width:150px">
+            Back to List
+        </a>
+    </div>
+</form>
+@section Scripts{
+	@{
+		<partial name="_ValidationScriptsPartial" />
+	}
+}
+

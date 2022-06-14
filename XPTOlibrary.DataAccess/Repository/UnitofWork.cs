@@ -15,8 +15,12 @@ namespace XPTOlibrary.DataAccess.Repository
         {
             _db = db;
             BookInformation = new BookInformationRepository(_db);
+            Publisher = new PublisherRepository(_db);
+
         }
         public IBookInformationRepository BookInformation { get; private set; }
+        public IPublisherRepository Publisher { get; private set; }
+
 
         public void Save()
         {

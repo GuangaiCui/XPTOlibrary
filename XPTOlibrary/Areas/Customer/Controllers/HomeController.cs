@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using XPTOlibrary.DataAccess.Repository.IRepository;
 using XPTOlibrary.Models;
 
 namespace XPTOlibrary.Controllers
@@ -7,15 +8,19 @@ namespace XPTOlibrary.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IUnitofWork _unitOfWork;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IUnitofWork unitOfWork)
         {
             _logger = logger;
+            _unitOfWork = unitOfWork;
         }
 
         public IActionResult Index()
         {
-            return View();
+            IEnumerable<BookInformation> BookInformationList = _unitOfWork.BookInformation.GetAll(includeProperties: "Publisher");
+
+            return View(BookInformationList);
         }
 
         public IActionResult Privacy()

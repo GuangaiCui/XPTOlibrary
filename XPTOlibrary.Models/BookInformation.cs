@@ -11,10 +11,10 @@ namespace XPTOlibrary.Models
         [Required]
         public string BookName { get; set; }
         [Required]
-        [Display(Name ="Publisher")]
+        [Display(Name = "Publisher")]
         public int PublisherId { get; set; }
         [ForeignKey("PublisherId")]
         public Publisher Publisher { get; set; }
-        public System.Nullable<int> Cover { get; set; }
+        public string Cover { get; set; }
     }
 }

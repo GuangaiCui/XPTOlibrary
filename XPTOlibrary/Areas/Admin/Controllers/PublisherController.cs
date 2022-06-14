@@ -7,18 +7,18 @@ using System.Collections.Generic;
 
 namespace XPTOlibrary.Controllers
 {
-    public class BookInformationController : Controller
+    public class PublisherController : Controller
     {
         private readonly IUnitofWork _unitOfWork;
 
-        public BookInformationController(IUnitofWork unitOfWork)
+        public PublisherController(IUnitofWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
         public IActionResult Index()
         {
-            IEnumerable<BookInformation> objBookInformationList = _unitOfWork.BookInformation.GetAll();
-            return View(objBookInformationList);
+            IEnumerable<Publisher> objPublisherList = _unitOfWork.Publisher.GetAll();
+            return View(objPublisherList);
         }
         //GET
         public IActionResult Create()
@@ -29,13 +29,13 @@ namespace XPTOlibrary.Controllers
         //POST
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(BookInformation obj)
+        public IActionResult Create(Publisher obj)
         {
             if (ModelState.IsValid)
             {
-                _unitOfWork.BookInformation.Add(obj);
+                _unitOfWork.Publisher.Add(obj);
                 _unitOfWork.Save();
-                TempData["success"] = "Book added successfully";
+                TempData["success"] = "Publisher added successfully";
                 return RedirectToAction("Index");
             }
             return View(obj);
@@ -46,18 +46,18 @@ namespace XPTOlibrary.Controllers
             {
                 return NotFound();
             }
-            var BookInformationFromDB = _unitOfWork.BookInformation.GetFirstOrDefault(x => x.BookISBN == id);
+            var PublisherFromDB = _unitOfWork.Publisher.GetFirstOrDefault(x => x.PublisherId == id);
             return View();
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(BookInformation obj)
+        public IActionResult Edit(Publisher obj)
         {
             if (ModelState.IsValid)
             {
-                _unitOfWork.BookInformation.Update(obj);
+                _unitOfWork.Publisher.Update(obj);
                 _unitOfWork.Save();
-                TempData["success"] = "Book updated successfully";
+                TempData["success"] = "Publisher updated successfully";
                 return RedirectToAction("Index");
             }
             return View(obj);
@@ -68,14 +68,14 @@ namespace XPTOlibrary.Controllers
             {
                 return NotFound();
             }
-            var BookInformationFromDbFirst = _unitOfWork.BookInformation.GetFirstOrDefault(u => u.BookISBN == id);
+            var PublisherFromDbFirst = _unitOfWork.Publisher.GetFirstOrDefault(u => u.PublisherId == id);
 
-            if (BookInformationFromDbFirst == null)
+            if (PublisherFromDbFirst == null)
             {
                 return NotFound();
             }
 
-            return View(BookInformationFromDbFirst);
+            return View(PublisherFromDbFirst);
         }
 
         //POST
@@ -83,15 +83,15 @@ namespace XPTOlibrary.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeletePOST(int? id)
         {
-            var obj = _unitOfWork.BookInformation.GetFirstOrDefault(u => u.BookISBN == id);
+            var obj = _unitOfWork.Publisher.GetFirstOrDefault(u => u.PublisherId == id);
             if (obj == null)
             {
                 return NotFound();
             }
 
-            _unitOfWork.BookInformation.Remove(obj);
+            _unitOfWork.Publisher.Remove(obj);
             _unitOfWork.Save();
-            TempData["success"] = "Book deleted successfully";
+            TempData["success"] = "Publisher deleted successfully";
             return RedirectToAction("Index");
 
         }
