@@ -1,21 +1,24 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using XPTOlibrary.DataAccess;
+using XPTOlibrary.DataAccess.Repository.IRepository;
 using XPTOlibrary.Models;
+using System.Collections.Generic;
+
 
 namespace XPTOlibrary.Controllers
 {
-    public class BookController : Controller
+    public class BookInformationController : Controller
     {
-        private readonly ApplicationDbContext _db;
+        private readonly IUnitofWork _unitOfWork;
 
-        public BookController(ApplicationDbContext db)
+        public BookInformationController(IUnitofWork unitOfWork)
         {
-            _db = db;
+            _unitOfWork = unitOfWork;
         }
         public IActionResult Index()
         {
-            IEnumerable<BookInformation> objBookList = _db.BookInformation;
-            return View(objBookList);
+            IEnumerable<BookInformation> objBookInformationList = _unitOfWork.BookInformation.GetAll();
+            return View(objBookInformationList);
         }
         //GET
         public IActionResult Create()
@@ -30,8 +33,8 @@ namespace XPTOlibrary.Controllers
         {
             if (ModelState.IsValid)
             {
-                _db.BookInformation.Add(obj);
-                _db.SaveChanges();
+                _unitOfWork.BookInformation.Add(obj);
+                _unitOfWork.Save();
                 TempData["success"] = "Book added successfully";
                 return RedirectToAction("Index");
             }
@@ -43,7 +46,7 @@ namespace XPTOlibrary.Controllers
             {
                 return NotFound();
             }
-            var BookInformationFromDB = _db.BookInformation.FirstOrDefault(x => x.BookISBN == id);
+            var BookInformationFromDB = _unitOfWork.BookInformation.GetFirstOrDefault(x => x.BookISBN == id);
             return View();
         }
         [HttpPost]
@@ -52,8 +55,8 @@ namespace XPTOlibrary.Controllers
         {
             if (ModelState.IsValid)
             {
-                _db.BookInformation.Update(obj);
-                _db.SaveChanges();
+                _unitOfWork.BookInformation.Update(obj);
+                _unitOfWork.Save();
                 TempData["success"] = "Book updated successfully";
                 return RedirectToAction("Index");
             }
@@ -65,7 +68,7 @@ namespace XPTOlibrary.Controllers
             {
                 return NotFound();
             }
-            var BookInformationFromDbFirst = _db.BookInformation.FirstOrDefault(u => u.BookISBN == id);
+            var BookInformationFromDbFirst = _unitOfWork.BookInformation.GetFirstOrDefault(u => u.BookISBN == id);
 
             if (BookInformationFromDbFirst == null)
             {
@@ -80,14 +83,14 @@ namespace XPTOlibrary.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeletePOST(int? id)
         {
-            var obj = _db.BookInformation.FirstOrDefault(u => u.BookISBN == id);
+            var obj = _unitOfWork.BookInformation.GetFirstOrDefault(u => u.BookISBN == id);
             if (obj == null)
             {
                 return NotFound();
             }
 
-            _db.BookInformation.Remove(obj);
-            _db.SaveChanges();
+            _unitOfWork.BookInformation.Remove(obj);
+            _unitOfWork.Save();
             TempData["success"] = "Book deleted successfully";
             return RedirectToAction("Index");
 

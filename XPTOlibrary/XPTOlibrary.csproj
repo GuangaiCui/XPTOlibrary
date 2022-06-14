@@ -22,4 +22,9 @@
     <ProjectReference Include="..\XPTOlibrary.DataAccess\XPTOlibrary.DataAccess.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Areas\Admin\Views\" />
+    <Folder Include="Areas\Customer\Views\" />
+  </ItemGroup>
+
 </Project>
