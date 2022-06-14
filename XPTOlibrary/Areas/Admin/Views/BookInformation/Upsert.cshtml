@@ -1,0 +1,92 @@
+﻿@model XPTOlibrary.Models.ViewModels.BookInformationVM
+
+<form method="post" asp-action="Upsert" enctype="multipart/form-data">
+	<input asp-for="BookInformation.BookISBN" hidden />
+	<input asp-for="BookInformation.Cover" hidden />
+
+	<div class="row">
+		<div class="col-10">
+			<div class="border p-3 mt-4 row">
+		<div class="col-12 pb-2">
+			<h2 class="text-primary">@(Model.BookInformation.BookISBN!=0?"Update": "Create")  BookInformation</h2>
+			<hr />
+		</div>
+		@*<div asp-validation-summary="All"></div>*@
+		<div class="mb-3">
+			<label asp-for="BookInformation.BookISBN"></label>
+			<input asp-for="BookInformation.BookISBN" class="form-control" />
+			<span asp-validation-for="BookInformation.BookISBN" class="text-danger"></span>
+		</div>
+		<div class="mb-3 col-6">
+			<label asp-for="BookInformation.BookName"></label>
+			<input asp-for="BookInformation.BookName" class="form-control" />
+			<span asp-validation-for="BookInformation.BookName" class="text-danger"></span>
+		</div>
+		<div class="mb-3">
+			<label asp-for="BookInformation.Cover"></label>
+			<input type="file" id="uploadBox" name="file" class="form-control" />
+		</div>
+
+		<div class="mb-3 col-6">
+			<label asp-for="BookInformation.PublisherId"></label>
+			<select asp-for="BookInformation.PublisherId" asp-items="@Model.PublisherList" class="form-select">
+				<option disabled selected>--Select Publisher--</option>
+			</select>
+			<span asp-validation-for="BookInformation.PublisherId" class="text-danger"></span>
+		</div>
+
+		</div>
+		<div class="col-12">
+			@if (Model.BookInformation.BookISBN != 0)
+			{
+				<button type="submit" class="btn btn-primary" style="width:150px">Update</button>
+			}
+			else
+			{
+				<button type="submit" onclick="return ValidateInput()" class="btn btn-primary" style="width:150px">Create</button>
+			}
+			<a asp-controller="BookInformation" asp-action="Index" class="btn btn-secondary" style="width:150px">
+				Back to List
+			</a>
+		</div>
+
+	</div>
+		</div>
+		<div class="col-2 pt-4">
+			<img src="@Model.BookInformation.Cover"
+			width="100%" style="border-radius:5px; border:1px solid #bbb9b9" />
+		</div>
+	</div>
+
+	
+
+
+
+
+
+</form>
+
+@section Scripts{
+	@{
+	<partial name="_ValidationScriptsPartial" />
+	}
+<script>
+    tinymce.init({
+      selector: 'textarea',
+      plugins: 'advlist autolink lists link image charmap print preview hr anchor pagebreak',
+      toolbar_mode: 'floating',
+   });
+  
+	function ValidateInput(){
+		if(document.getElementById("uploadBox").value==""){
+			Swal.fire({
+			  icon: 'error',
+			  title: 'Oops...',
+			  text: 'Please upload an Image!',
+			});
+			return false;
+		}
+		return true;
+	}
+</script>
+}
