@@ -48,7 +48,7 @@ namespace XPTOlibrary.Controllers
                 return NotFound();
             }
             var AuthorFromDB = _unitOfWork.Author.GetFirstOrDefault(x => x.AuthorId == id);
-            return View();
+            return View(AuthorFromDB);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]

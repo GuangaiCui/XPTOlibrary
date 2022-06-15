@@ -10,13 +10,13 @@ function loadDataTable() {
             "url":"/Admin/BookInformation/GetAll"
         },
         "columns": [
-            { "data": "BookISBN", "width": "15%" },
-            { "data": "BookName", "width": "15%" },
-            { "data": "Publisher.PublisherName", "width": "15%" },
-            { "data": "Author.AuthorName", "width": "15%" }
-            { "data": "Topic.TopicName", "width": "15%" }
+            { "data": "bookISBN", "width": "15%" },
+            { "data": "bookName", "width": "15%" },
+            { "data": "publisher.publisherName", "width": "15%" },
+            { "data": "author.authorName", "width": "15%" },
+            { "data": "topic.topicName", "width": "15%" },
             {
-                "data": "id",
+                "data": "bookISBN",
                 "render": function (data) {
                     return `
                         <div class="w-75 btn-group" role="group">

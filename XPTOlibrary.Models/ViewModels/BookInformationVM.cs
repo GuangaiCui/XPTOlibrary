@@ -13,7 +13,9 @@ namespace XPTOlibrary.Models.ViewModels
         public BookInformation BookInformation { get; set; }
         [ValidateNever]
         public IEnumerable<SelectListItem> PublisherList { get; set; }
+        [ValidateNever]
         public IEnumerable<SelectListItem> AuthorList { get; set; }
+        [ValidateNever]
         public IEnumerable<SelectListItem> TopicList { get; set; }
 
     }

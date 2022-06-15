@@ -22,5 +22,6 @@ namespace XPTOlibrary.DataAccess.Repository
         {
             _db.BookInformation.Update(obj);
         }
+
     }
 }

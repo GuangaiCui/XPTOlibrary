@@ -28,6 +28,7 @@ public class BookInformationController : Controller
 
     public IActionResult Index()
     {
+        
         return View();
     }
 
@@ -37,6 +38,7 @@ public class BookInformationController : Controller
         BookInformationVM BookInformationVM = new()
         {
             BookInformation = new(),
+
             PublisherList = _unitOfWork.Publisher.GetAll().Select(i => new SelectListItem
             {
                 Text = i.PublisherName,
@@ -103,7 +105,8 @@ public class BookInformationController : Controller
                 obj.BookInformation.Cover = @"\images\BookInformation\" + fileName + extension;
 
             }
-            if (obj.BookInformation.BookISBN == 0)
+            if (_unitOfWork.BookInformation.GetFirstOrDefault(u => u.BookISBN == obj.BookInformation.BookISBN)==null)
+
             {
                 _unitOfWork.BookInformation.Add(obj.BookInformation);
             }

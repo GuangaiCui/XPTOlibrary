@@ -48,7 +48,7 @@ namespace XPTOlibrary.Controllers
                 return NotFound();
             }
             var TopicFromDB = _unitOfWork.Topic.GetFirstOrDefault(x => x.TopicId == id);
-            return View();
+            return View(TopicFromDB);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
