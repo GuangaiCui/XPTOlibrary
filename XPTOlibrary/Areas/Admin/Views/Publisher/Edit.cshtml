@@ -1,16 +1,12 @@
 ﻿@model Publisher
 <form method="post" asp-action="Edit">
+    	<input asp-for="PublisherId" hidden />
     <div class="border p-3 mt-4">
         <div class="row pb-2">
             <h2 class="text-primary">Eidt Publisher</h2>
             <hr />
         </div>
         @*<div asp-validation-summary="All"></div>*@
-        <div class="mb-3">
-            <label asp-for="PublisherId"></label>
-            <input asp-for="PublisherId" class="form-control" />
-            <span asp-validation-for="PublisherId" class="text-danger"></span>
-        </div>
         <div class="mb-3">
             <label asp-for="PublisherName"></label>
             <input asp-for="PublisherName" class="form-control" />

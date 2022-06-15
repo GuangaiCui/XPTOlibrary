@@ -22,9 +22,10 @@ public class HomeController : Controller
             IEnumerable<BookInformation> BookInformationList = _unitOfWork.BookInformation.GetAll(includeProperties: "Publisher,Author,Topic");
 
             return View(BookInformationList);
+
         }
 
-        public IActionResult Privacy()
+    public IActionResult Privacy()
         {
             return View();
         }

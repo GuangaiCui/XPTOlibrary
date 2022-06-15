@@ -25,6 +25,6 @@ namespace XPTOlibrary.Models
         public int PublisherId { get; set; }
         [ForeignKey("PublisherId")]
         public Publisher Publisher { get; set; }
-        public string Cover { get; set; }
+        public string? Cover { get; set; }
     }
 }

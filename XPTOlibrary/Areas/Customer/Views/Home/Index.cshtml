@@ -1,6 +1,5 @@
 ﻿@model IEnumerable<XPTOlibrary.Models.BookInformation>
 
-
 <div class="row pb-3">
 	@foreach(var book in Model)
 	{
@@ -15,7 +14,7 @@
 							<p class="card-title h5 text-primary">@book.BookName</p>
 							<br>
 							<p class="card-title h5 text-primary">@book.BookISBN</p>
-							<p class="card-title text-info">by <b>@book.BookISBN</b></p>
+							<p class="card-title text-info">by <b>@book.Author</b></p>
 						</div>
 						</div>
 					</div>
