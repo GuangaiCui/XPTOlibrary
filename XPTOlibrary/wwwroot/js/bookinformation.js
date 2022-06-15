@@ -10,9 +10,9 @@ function loadDataTable() {
             "url":"/Admin/BookInformation/GetAll"
         },
         "columns": [
-            { "data": "isbn", "width": "15%" },
-            { "data": "title", "width": "15%" },
-            { "data": "publisher.publishername", "width": "15%" },
+            { "data": "BookISBN", "width": "15%" },
+            { "data": "BookName", "width": "15%" },
+            { "data": "Publisher.PublisherName", "width": "15%" },
             {
                 "data": "id",
                 "render": function (data) {

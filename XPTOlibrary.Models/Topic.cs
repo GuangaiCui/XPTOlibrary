@@ -8,6 +8,5 @@ namespace XPTOlibrary.Models
         public int TopicId { get; set; }
         [Required]
         public string TopicName { get; set; }
-
     }
 }

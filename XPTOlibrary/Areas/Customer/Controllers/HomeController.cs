@@ -3,9 +3,10 @@ using System.Diagnostics;
 using XPTOlibrary.DataAccess.Repository.IRepository;
 using XPTOlibrary.Models;
 
-namespace XPTOlibrary.Controllers
-{
-    public class HomeController : Controller
+namespace XPTOlibrary.Controllers;
+[Area("Customer")]
+
+public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IUnitofWork _unitOfWork;
@@ -34,4 +35,3 @@ namespace XPTOlibrary.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
-}

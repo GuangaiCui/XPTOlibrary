@@ -13,6 +13,7 @@ using System.IO;
 using System.Linq;
 
 namespace XPTOlibrary.Controllers;
+[Area("Admin")]
 public class BookInformationController : Controller
 {
     private readonly IUnitofWork _unitOfWork;

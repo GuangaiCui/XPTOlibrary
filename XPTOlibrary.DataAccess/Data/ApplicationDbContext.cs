@@ -10,10 +10,10 @@ public class ApplicationDbContext :IdentityDbContext
     {
     }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         //Configure domain classes using modelBuilder here   
-
+        base.OnModelCreating(modelBuilder);
         modelBuilder.Entity<BookAuthor>().HasKey(o => new { o.BookISBN, o.AuthorId });
         modelBuilder.Entity<BookCores>().HasKey(o => new { o.BookISBN, o.CoreId });
         modelBuilder.Entity<BookTopic>().HasKey(o => new { o.BookISBN, o.TopicId });
