@@ -11,6 +11,16 @@ namespace XPTOlibrary.Models
         [Required]
         public string BookName { get; set; }
         [Required]
+        [Display(Name ="Author")]
+        public int AuthorId { get; set; }
+        [ForeignKey("AuthorId")]
+        public Author Author { get; set; }
+        [Required]
+        [Display(Name ="Topic")]
+        public int TopicId { get; set; }
+        [ForeignKey("TopicId")]
+        public Topic Topic { get; set; }
+        [Required]
         [Display(Name = "Publisher")]
         public int PublisherId { get; set; }
         [ForeignKey("PublisherId")]

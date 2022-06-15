@@ -1,20 +1,20 @@
-﻿@model Publisher
+﻿@model Author
 <form method="post" asp-action="Create">
     <div class="border p-3 mt-4">
         <div class="row pb-2">
-            <h2 class="text-primary">Add New Publisher</h2>
+            <h2 class="text-primary">Add New Author</h2>
             <hr />
         </div>
         @*<div asp-validation-summary="All"></div>*@
         <div class="mb-3">
-            <label asp-for="PublisherName"></label>
-            <input asp-for="PublisherName" class="form-control" />
-            <span asp-validation-for="PublisherName"
+            <label asp-for="AuthorName"></label>
+            <input asp-for="AuthorName" class="form-control" />
+            <span asp-validation-for="AuthorName"
             class="text-danger"></span>
         </div>
         </div>
         <button type="submit" class="btn btn-primary" style="width:150px">Create</button>
-        <a asp-controller="Publisher" asp-action="Index" class="btn btn-secondary" style="width:150px">
+        <a asp-controller="Author" asp-action="Index" class="btn btn-secondary" style="width:150px">
             Back to List
         </a>
     </div>

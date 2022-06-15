@@ -42,6 +42,16 @@ public class BookInformationController : Controller
                 Text = i.PublisherName,
                 Value = i.PublisherId.ToString()
             }),
+            AuthorList = _unitOfWork.Author.GetAll().Select(i => new SelectListItem
+            {
+                Text = i.AuthorName,
+                Value = i.AuthorId.ToString()
+            }),
+            TopicList = _unitOfWork.Topic.GetAll().Select(i => new SelectListItem
+            {
+                Text = i.TopicName,
+                Value = i.TopicId.ToString()
+            }),
         };
 
         if (id == null || id == 0)
@@ -114,7 +124,7 @@ public class BookInformationController : Controller
     [HttpGet]
     public IActionResult GetAll()
     {
-        var BookInformationList = _unitOfWork.BookInformation.GetAll(includeProperties: "Publisher");
+        var BookInformationList = _unitOfWork.BookInformation.GetAll(includeProperties: "Publisher,Author,Topic");
         return Json(new { data = BookInformationList });
     }
 

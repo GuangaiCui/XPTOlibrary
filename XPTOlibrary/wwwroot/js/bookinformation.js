@@ -13,6 +13,8 @@ function loadDataTable() {
             { "data": "BookISBN", "width": "15%" },
             { "data": "BookName", "width": "15%" },
             { "data": "Publisher.PublisherName", "width": "15%" },
+            { "data": "Author.AuthorName", "width": "15%" }
+            { "data": "Topic.TopicName", "width": "15%" }
             {
                 "data": "id",
                 "render": function (data) {

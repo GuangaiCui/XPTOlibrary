@@ -7,11 +7,7 @@ namespace XPTOlibrary.Models
     {
         [Key]
         public int RecordId { get; set; }
-        [Required]
-        [Display(Name ="User Name")]
-        public int UserId { get; set; }
-        [ForeignKey("UserId")]
-        public User User { get; set; }
+
         [Required]
         [Display(Name ="Book Title")]
         public int BookISBN { get; set; }

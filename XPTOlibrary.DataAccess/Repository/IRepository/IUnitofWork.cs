@@ -10,6 +10,8 @@ namespace XPTOlibrary.DataAccess.Repository.IRepository
     {
         IBookInformationRepository BookInformation { get; }
         IPublisherRepository Publisher { get; }
+        IAuthorRepository Author { get; }
+        ITopicRepository Topic { get; }
 
 
         void Save();

@@ -19,7 +19,7 @@ public class HomeController : Controller
 
         public IActionResult Index()
         {
-            IEnumerable<BookInformation> BookInformationList = _unitOfWork.BookInformation.GetAll(includeProperties: "Publisher");
+            IEnumerable<BookInformation> BookInformationList = _unitOfWork.BookInformation.GetAll(includeProperties: "Publisher,Author,Topic");
 
             return View(BookInformationList);
         }
