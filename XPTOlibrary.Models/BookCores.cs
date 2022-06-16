@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace XPTOlibrary.Models
@@ -9,12 +10,15 @@ namespace XPTOlibrary.Models
         [Display(Name ="Book Title")]
         public int BookISBN { get; set; }
         [ForeignKey("BookISBN")]
+        [ValidateNever]
         public BookInformation BookInformation { get; set; }
         
 
         [Display(Name="Core")]
         public int CoreId { get; set; }
         [ForeignKey("CoreId")]
+        [ValidateNever]
+
         public Cores Cores { get; set; }
 
         [Required]
