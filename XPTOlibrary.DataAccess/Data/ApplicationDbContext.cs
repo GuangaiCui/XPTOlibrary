@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using XPTOlibrary.Models;
+using XPTOlibrary.Models.ViewModels;
 
 namespace XPTOlibrary.DataAccess;
 
@@ -15,6 +16,7 @@ public class ApplicationDbContext :IdentityDbContext
         //Configure domain classes using modelBuilder here   
         base.OnModelCreating(modelBuilder);
         modelBuilder.Entity<BookCores>().HasKey(o => new { o.BookISBN, o.CoreId });
+        modelBuilder.Entity<BookwithCoresVM>().HasNoKey();
 
     }
     public DbSet<Author> Author { get; set; }
@@ -24,4 +26,5 @@ public class ApplicationDbContext :IdentityDbContext
     public DbSet<Cores> Cores { get; set; }
     public DbSet<Publisher> Publisher { get; set; }
     public DbSet<Topic> Topic { get; set; }
+    public DbSet<BookwithCoresVM> BookwithCoresVM { get; set; }
 }

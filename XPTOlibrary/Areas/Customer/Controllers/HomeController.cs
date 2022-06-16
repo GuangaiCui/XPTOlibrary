@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using XPTOlibrary.DataAccess.Repository.IRepository;
 using XPTOlibrary.Models;
+using XPTOlibrary.Models.ViewModels;
 
 namespace XPTOlibrary.Controllers;
 [Area("Customer")]
@@ -24,6 +25,11 @@ public class HomeController : Controller
             return View(BookInformationList);
 
         }
+    public IActionResult Details(int id)
+    {
+        BookInformation bookinformation = _unitOfWork.BookInformation.GetFirstOrDefault(u => u.BookISBN == id, "Publisher,Author,Topic");
+        return View(bookinformation);
+    }
 
     public IActionResult Privacy()
         {

@@ -1,19 +1,19 @@
-﻿@model XPTOlibrary.Models.Author
+﻿@model XPTOlibrary.Models.Cores
 <form method="post" asp-action="Edit">
-    <input asp-for="AuthorId" hidden />
+    <input asp-for="CoreId" hidden />
     <div class="border p-3 mt-4">
         <div class="row pb-2">
-            <h2 class="text-primary">Eidt Author</h2>
+            <h2 class="text-primary">Eidt Cores</h2>
             <hr />
         </div>
         @*<div asp-validation-summary="All"></div>*@
         <div class="mb-3">
-            <label asp-for="AuthorName"></label>
-            <input asp-for="AuthorName" class="form-control" />
-            <span asp-validation-for="AuthorName" class="text-danger"></span>
+            <label asp-for="CoreName"></label>
+            <input asp-for="CoreName" class="form-control" />
+            <span asp-validation-for="CoreName" class="text-danger"></span>
         </div>
         <button type="submit" class="btn btn-primary" style="width:150px">Update</button>
-        <a asp-controller="Author" asp-action="Index" class="btn btn-secondary" style="width:150px">
+        <a asp-controller="Cores" asp-action="Index" class="btn btn-secondary" style="width:150px">
             Back to List
         </a>
     </div>
