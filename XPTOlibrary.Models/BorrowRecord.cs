@@ -16,6 +16,12 @@ namespace XPTOlibrary.Models
         [ValidateNever]
         public BookInformation BookInformation { get; set; }
         [Required]
+        [Display(Name ="User")]
+        public string ApplicationUserId { get; set; }
+        [ForeignKey("ApplicationUserId")]
+        [ValidateNever]
+        public ApplicationUser ApplicationUser { get; set; }
+        [Required]
         [Display(Name ="Core")]
         public int CoreId { get; set; }
         [ForeignKey("CoreId")]

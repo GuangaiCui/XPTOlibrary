@@ -13,6 +13,8 @@ namespace XPTOlibrary.DataAccess.Repository.IRepository
         IAuthorRepository Author { get; }
         ITopicRepository Topic { get; }
         ICoresRepository Cores { get; }
+        IBorrowRecordRepository BorrowRecord { get; }
+        IApplicationUserRepository ApplicationUser { get; }
 
 
         void Save();

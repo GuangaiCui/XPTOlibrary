@@ -5,6 +5,7 @@ using XPTOlibrary.DataAccess.Repository.IRepository;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using XPTOlibrary.Utility;
+using XPTOlibrary.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 

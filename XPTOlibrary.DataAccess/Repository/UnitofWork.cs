@@ -20,6 +20,8 @@ namespace XPTOlibrary.DataAccess.Repository
             Author = new AuthorRepository(_db);
             Cores = new CoresRepository(_db);
             Topic = new TopicRepository(_db);
+            BorrowRecord = new BorrowRecordRepository(_db);
+            ApplicationUser = new ApplicationUserRepository(_db);
 
 
         }
@@ -28,6 +30,8 @@ namespace XPTOlibrary.DataAccess.Repository
         public IAuthorRepository Author { get; private set; }
         public ITopicRepository Topic { get; private set; }
         public ICoresRepository Cores { get; private set; }
+        public IBorrowRecordRepository BorrowRecord { get; private set; }
+        public IApplicationUserRepository ApplicationUser { get; private set; }
 
 
 

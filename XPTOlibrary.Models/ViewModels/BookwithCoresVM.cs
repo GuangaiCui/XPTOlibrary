@@ -8,8 +8,7 @@ namespace XPTOlibrary.Models.ViewModels
 {
     public class BookwithCoresVM
     {
-        public BookCores BookCores { get; set; }
-        public IEnumerable<BookInformation> BookInformation { get; set; }
-        public IEnumerable<Cores> Cores { get; set; }
+        public BookInformation BookInformation { get; set; }
+        public IEnumerable<BookCores> BookCores { get; set; }
     }
 }
