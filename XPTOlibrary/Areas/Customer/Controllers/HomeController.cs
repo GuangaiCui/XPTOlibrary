@@ -27,7 +27,7 @@ public class HomeController : Controller
         }
     public IActionResult Details(int id)
     {
-        BookInformation bookinformation = _unitOfWork.BookInformation.GetFirstOrDefault(u => u.BookISBN == id, "Publisher,Author,Topic");
+        BookCores BookCores = _unitOfWork.BookCores.GetFirstOrDefault(u => u.BookISBN == id, includeProperties: "BookInformation,Publisher,Author,Topic");
         return View(bookinformation);
     }
 

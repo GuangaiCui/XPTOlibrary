@@ -15,6 +15,7 @@ namespace XPTOlibrary.DataAccess.Repository.IRepository
         ICoresRepository Cores { get; }
         IBorrowRecordRepository BorrowRecord { get; }
         IApplicationUserRepository ApplicationUser { get; }
+        IBookCoresRepository BookCores { get; }
 
 
         void Save();
