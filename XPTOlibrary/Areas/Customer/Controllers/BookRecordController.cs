@@ -6,7 +6,6 @@ using XPTOlibrary.Models.ViewModels;
 
 namespace XPTOlibrary.Controllers;
 [Area("Customer")]
-
 public class BorrowRecordController : Controller
     {
         private readonly IUnitofWork _unitOfWork;

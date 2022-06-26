@@ -6,7 +6,6 @@ using XPTOlibrary.Models.ViewModels;
 
 namespace XPTOlibrary.Controllers;
 [Area("Customer")]
-
 public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -27,8 +26,8 @@ public class HomeController : Controller
         }
     public IActionResult Details(int id)
     {
-        BookCores BookCores = _unitOfWork.BookCores.GetFirstOrDefault(u => u.BookISBN == id, includeProperties: "BookInformation,Publisher,Author,Topic");
-        return View(bookinformation);
+        BookCores BookCores = _unitOfWork.BookCores.GetFirstOrDefault(u => u.BookISBN == id, includeProperties: "BookInformation,Cores");
+        return View(BookCores);
     }
 
     public IActionResult Privacy()
