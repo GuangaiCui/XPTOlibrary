@@ -1,7 +1,13 @@
 ﻿@model IEnumerable<XPTOlibrary.Models.BorrowRecord>;
 @{
     ViewData["Title"] = "Index";
+    string Record_Borrowed = "Borrowed";
+    string Record_Delayed = "Delayed";
+    string Record_Urgent = "Urgent";//3
+    string Record_ReturnSoon = "Return Soon";//5
+    string Record_Returned = "Returned";
 }
+
 
 <partial name="_Notification" />
 
@@ -11,7 +17,6 @@
             <h2 class="text-primary">Borrow Record List</h2>
         </div>
         <div class="col-6 text-end">
-
         </div>
     </div>
     <br /><br />
@@ -20,23 +25,45 @@
         <thead>
 
         <th>BookName</th>
-        @*<th>AuthorName</th>*@
         <th>CoreName</th>
         <th>Date Borrowed</th>
         <th>Date Returned</th>
-        <th></th>
+        <th>Status</th>
         </thead>
         <tbody>
             @foreach (var obj in Model)
             {
                 <tr>
                     <td>@obj.BookInformation.BookName</td>
-                    @*<td>@obj.BookInformation.Author.AuthorName</td>*@
                     <td>@obj.Cores.CoreName</td>
                     <td>@obj.DateBorrow</td>
                     <td>@obj.DateReturn</td>
                     <td>
 
+                        @if (@obj.DateReturn == null)
+                        {
+                            @if (@obj.DateBorrow.AddDays(10) < DateTime.Today)
+                            {
+                                @Record_Borrowed
+                            }
+                            @if (@obj.DateBorrow.AddDays(10) > DateTime.Today && @obj.DateBorrow.AddDays(12) < DateTime.Today)
+                            {
+                                @Record_ReturnSoon
+                            }
+                            @if (@obj.DateBorrow.AddDays(12) > DateTime.Today && @obj.DateBorrow.AddDays(15) < DateTime.Today)
+                            {
+                                @Record_Urgent
+                            }
+                            @if (@obj.DateBorrow.AddDays(15) < DateTime.Today)
+                            {
+                                @Record_Delayed
+                            }
+
+                        }
+                        else
+                        {
+                            @Record_Returned
+                        }
                     </td>
                 </tr>
             }

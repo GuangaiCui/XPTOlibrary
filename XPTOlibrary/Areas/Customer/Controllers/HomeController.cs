@@ -26,8 +26,14 @@ public class HomeController : Controller
         }
     public IActionResult Details(int id)
     {
+        BookInformation BookInformations = _unitOfWork.BookInformation.GetFirstOrDefault(u => u.BookISBN == id, includeProperties: "Publisher,Author,Topic");
         BookCores BookCores = _unitOfWork.BookCores.GetFirstOrDefault(u => u.BookISBN == id, includeProperties: "BookInformation,Cores");
-        return View(BookCores);
+        BookwithCoresVM bookwithCores = new BookwithCoresVM()
+        {
+            BookInformation = BookInformations,
+            BookCores = BookCores,
+        };
+        return View(bookwithCores);
     }
 
     public IActionResult Privacy()
