@@ -26,12 +26,12 @@ public class HomeController : Controller
         }
     public IActionResult Details(int id)
     {
-        BookInformation BookInformations = _unitOfWork.BookInformation.GetFirstOrDefault(u => u.BookISBN == id, includeProperties: "Publisher,Author,Topic");
-        BookCores BookCores = _unitOfWork.BookCores.GetFirstOrDefault(u => u.BookISBN == id, includeProperties: "BookInformation,Cores");
-        BookwithCoresVM bookwithCores = new BookwithCoresVM()
+        var BookInformations = _unitOfWork.BookInformation.GetFirstOrDefault(u => u.BookISBN == id,includeProperties:"Publisher,Author,Topic");
+        IEnumerable<BookCores> BookCoresList = _unitOfWork.BookCores.GetAll(u => u.BookISBN == id, includeProperties: "BookInformation,Cores");
+        BookwithCoresVM bookwithCores = new ()
         {
             BookInformation = BookInformations,
-            BookCores = BookCores,
+            BookCores = BookCoresList,
         };
         return View(bookwithCores);
     }
