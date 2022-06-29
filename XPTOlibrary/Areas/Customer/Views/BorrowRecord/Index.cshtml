@@ -29,6 +29,7 @@
         <th>Date Borrowed</th>
         <th>Date Returned</th>
         <th>Status</th>
+        <th></th>
         </thead>
         <tbody>
             @foreach (var obj in Model)
@@ -63,6 +64,15 @@
                         else
                         {
                             @Record_Returned
+                        }
+                    </td>
+                    <td>
+                         @if (@obj.DateReturn == null)
+                        {
+                            <div class="w-75 btn-group" role="group">
+                            <a asp-controller="BookBorrow" asp-action="Return" asp-route-id="@obj.RecordId"
+                           class="btn btn-primary mx-2"> Return</a>
+                        </div>
                         }
                     </td>
                 </tr>

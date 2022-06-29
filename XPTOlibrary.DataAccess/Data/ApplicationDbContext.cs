@@ -11,13 +11,13 @@ public class ApplicationDbContext :IdentityDbContext
     {
     }
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        //Configure domain classes using modelBuilder here   
-        base.OnModelCreating(modelBuilder);
-        modelBuilder.Entity<BookCores>().HasKey(o => new { o.BookISBN, o.CoreId });
+    //protected override void OnModelCreating(ModelBuilder modelBuilder)
+    //{
+    //    //Configure domain classes using modelBuilder here   
+    //    base.OnModelCreating(modelBuilder);
+    //    modelBuilder.Entity<BookCores>().HasKey(o => new { o.BookISBN, o.CoreId });
 
-    }
+    //}
     public DbSet<Author> Author { get; set; }
     public DbSet<BookCores> BookCores { get; set; }
     public DbSet<BookInformation> BookInformation { get; set; }

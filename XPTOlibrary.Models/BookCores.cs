@@ -6,6 +6,8 @@ namespace XPTOlibrary.Models
 {
     public class BookCores
     {
+        [Key]
+        public int BookCoreid { get; set; }
         
         [Display(Name ="Book Title")]
         public int BookISBN { get; set; }

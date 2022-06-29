@@ -22,11 +22,12 @@ public class BorrowRecordController : Controller
             return View(BorrowRecordList);
 
         }
-    public IActionResult Details(int id)
+    public IActionResult Return(int id)
     {
         BookInformation bookinformation = _unitOfWork.BookInformation.GetFirstOrDefault(u => u.BookISBN == id, "Publisher,Author,Topic");
         return View(bookinformation);
     }
+
 
     public IActionResult Privacy()
         {

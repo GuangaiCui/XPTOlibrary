@@ -35,6 +35,11 @@ public class HomeController : Controller
         };
         return View(bookwithCores);
     }
+    [HttpPost]
+    //public IActionResult Borrow(int bookid,int coreid)
+    //{
+
+    //}
 
     public IActionResult Privacy()
         {

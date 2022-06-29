@@ -245,16 +245,24 @@ namespace XPTOlibrary.DataAccess.Migrations
 
             modelBuilder.Entity("XPTOlibrary.Models.BookCores", b =>
                 {
-                    b.Property<int>("BookISBN")
+                    b.Property<int>("BookCoreid")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("CoreId")
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BookCoreid"), 1L, 1);
+
+                    b.Property<int>("BookISBN")
                         .HasColumnType("int");
 
                     b.Property<int>("Copies")
                         .HasColumnType("int");
 
-                    b.HasKey("BookISBN", "CoreId");
+                    b.Property<int>("CoreId")
+                        .HasColumnType("int");
+
+                    b.HasKey("BookCoreid");
+
+                    b.HasIndex("BookISBN");
 
                     b.HasIndex("CoreId");
 
@@ -314,7 +322,7 @@ namespace XPTOlibrary.DataAccess.Migrations
                     b.Property<DateTime>("DateBorrow")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("DateReturn")
+                    b.Property<DateTime?>("DateReturn")
                         .HasColumnType("datetime2");
 
                     b.HasKey("RecordId");

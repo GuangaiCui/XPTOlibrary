@@ -30,6 +30,6 @@ namespace XPTOlibrary.Models
         public Cores Cores { get; set; }
         [Required]
         public DateTime DateBorrow { get; set; } = DateTime.Now;
-        public DateTime DateReturn { get; set; }
+        public DateTime? DateReturn { get; set; }
     }
 }

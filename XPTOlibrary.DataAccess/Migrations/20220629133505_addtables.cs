@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace XPTOlibrary.DataAccess.Migrations
 {
-    public partial class add : Migration
+    public partial class addtables : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -28,6 +28,10 @@ namespace XPTOlibrary.DataAccess.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Discriminator = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Birthday = table.Column<DateTime>(type: "Date", nullable: true),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -49,7 +53,7 @@ namespace XPTOlibrary.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Atuhor",
+                name: "Author",
                 columns: table => new
                 {
                     AuthorId = table.Column<int>(type: "int", nullable: false)
@@ -58,20 +62,20 @@ namespace XPTOlibrary.DataAccess.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Atuhor", x => x.AuthorId);
+                    table.PrimaryKey("PK_Author", x => x.AuthorId);
                 });
 
             migrationBuilder.CreateTable(
-                name: "City",
+                name: "Cores",
                 columns: table => new
                 {
-                    CityId = table.Column<int>(type: "int", nullable: false)
+                    CoreId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    CityName = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    CoreName = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_City", x => x.CityId);
+                    table.PrimaryKey("PK_Cores", x => x.CoreId);
                 });
 
             migrationBuilder.CreateTable(
@@ -146,8 +150,8 @@ namespace XPTOlibrary.DataAccess.Migrations
                 name: "AspNetUserLogins",
                 columns: table => new
                 {
-                    LoginProvider = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
-                    ProviderKey = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ProviderKey = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ProviderDisplayName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
@@ -191,8 +195,8 @@ namespace XPTOlibrary.DataAccess.Migrations
                 columns: table => new
                 {
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    LoginProvider = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Value = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
@@ -207,26 +211,6 @@ namespace XPTOlibrary.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Cores",
-                columns: table => new
-                {
-                    CoreId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CoreName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CityId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Cores", x => x.CoreId);
-                    table.ForeignKey(
-                        name: "FK_Cores_City_CityId",
-                        column: x => x.CityId,
-                        principalTable: "City",
-                        principalColumn: "CityId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "BookInformation",
                 columns: table => new
                 {
@@ -235,15 +219,15 @@ namespace XPTOlibrary.DataAccess.Migrations
                     AuthorId = table.Column<int>(type: "int", nullable: false),
                     TopicId = table.Column<int>(type: "int", nullable: false),
                     PublisherId = table.Column<int>(type: "int", nullable: false),
-                    Cover = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Cover = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_BookInformation", x => x.BookISBN);
                     table.ForeignKey(
-                        name: "FK_BookInformation_Atuhor_AuthorId",
+                        name: "FK_BookInformation_Author_AuthorId",
                         column: x => x.AuthorId,
-                        principalTable: "Atuhor",
+                        principalTable: "Author",
                         principalColumn: "AuthorId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -264,13 +248,15 @@ namespace XPTOlibrary.DataAccess.Migrations
                 name: "BookCores",
                 columns: table => new
                 {
+                    BookCoreid = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     BookISBN = table.Column<int>(type: "int", nullable: false),
                     CoreId = table.Column<int>(type: "int", nullable: false),
                     Copies = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BookCores", x => new { x.BookISBN, x.CoreId });
+                    table.PrimaryKey("PK_BookCores", x => x.BookCoreid);
                     table.ForeignKey(
                         name: "FK_BookCores_BookInformation_BookISBN",
                         column: x => x.BookISBN,
@@ -292,6 +278,7 @@ namespace XPTOlibrary.DataAccess.Migrations
                     RecordId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     BookISBN = table.Column<int>(type: "int", nullable: false),
+                    ApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     CoreId = table.Column<int>(type: "int", nullable: false),
                     DateBorrow = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DateReturn = table.Column<DateTime>(type: "datetime2", nullable: false)
@@ -299,6 +286,12 @@ namespace XPTOlibrary.DataAccess.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_BorrowRecord", x => x.RecordId);
+                    table.ForeignKey(
+                        name: "FK_BorrowRecord_AspNetUsers_ApplicationUserId",
+                        column: x => x.ApplicationUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_BorrowRecord_BookInformation_BookISBN",
                         column: x => x.BookISBN,
@@ -353,6 +346,11 @@ namespace XPTOlibrary.DataAccess.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_BookCores_BookISBN",
+                table: "BookCores",
+                column: "BookISBN");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_BookCores_CoreId",
                 table: "BookCores",
                 column: "CoreId");
@@ -373,6 +371,11 @@ namespace XPTOlibrary.DataAccess.Migrations
                 column: "TopicId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_BorrowRecord_ApplicationUserId",
+                table: "BorrowRecord",
+                column: "ApplicationUserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_BorrowRecord_BookISBN",
                 table: "BorrowRecord",
                 column: "BookISBN");
@@ -381,11 +384,6 @@ namespace XPTOlibrary.DataAccess.Migrations
                 name: "IX_BorrowRecord_CoreId",
                 table: "BorrowRecord",
                 column: "CoreId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Cores_CityId",
-                table: "Cores",
-                column: "CityId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -424,16 +422,13 @@ namespace XPTOlibrary.DataAccess.Migrations
                 name: "Cores");
 
             migrationBuilder.DropTable(
-                name: "Atuhor");
+                name: "Author");
 
             migrationBuilder.DropTable(
                 name: "Publisher");
 
             migrationBuilder.DropTable(
                 name: "Topic");
-
-            migrationBuilder.DropTable(
-                name: "City");
         }
     }
 }

@@ -12,8 +12,8 @@ using XPTOlibrary.DataAccess;
 namespace XPTOlibrary.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220615092605_add")]
-    partial class add
+    [Migration("20220629194957_datereturnnullable")]
+    partial class datereturnnullable
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -88,6 +88,10 @@ namespace XPTOlibrary.DataAccess.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -139,6 +143,8 @@ namespace XPTOlibrary.DataAccess.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -169,12 +175,10 @@ namespace XPTOlibrary.DataAccess.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ProviderKey")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
@@ -211,12 +215,10 @@ namespace XPTOlibrary.DataAccess.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("LoginProvider")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Value")
                         .HasColumnType("nvarchar(max)");
@@ -240,21 +242,29 @@ namespace XPTOlibrary.DataAccess.Migrations
 
                     b.HasKey("AuthorId");
 
-                    b.ToTable("Atuhor");
+                    b.ToTable("Author");
                 });
 
             modelBuilder.Entity("XPTOlibrary.Models.BookCores", b =>
                 {
-                    b.Property<int>("BookISBN")
+                    b.Property<int>("BookCoreid")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("CoreId")
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BookCoreid"), 1L, 1);
+
+                    b.Property<int>("BookISBN")
                         .HasColumnType("int");
 
                     b.Property<int>("Copies")
                         .HasColumnType("int");
 
-                    b.HasKey("BookISBN", "CoreId");
+                    b.Property<int>("CoreId")
+                        .HasColumnType("int");
+
+                    b.HasKey("BookCoreid");
+
+                    b.HasIndex("BookISBN");
 
                     b.HasIndex("CoreId");
 
@@ -274,7 +284,6 @@ namespace XPTOlibrary.DataAccess.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Cover")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("PublisherId")
@@ -302,6 +311,10 @@ namespace XPTOlibrary.DataAccess.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RecordId"), 1L, 1);
 
+                    b.Property<string>("ApplicationUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<int>("BookISBN")
                         .HasColumnType("int");
 
@@ -311,33 +324,18 @@ namespace XPTOlibrary.DataAccess.Migrations
                     b.Property<DateTime>("DateBorrow")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("DateReturn")
+                    b.Property<DateTime?>("DateReturn")
                         .HasColumnType("datetime2");
 
                     b.HasKey("RecordId");
+
+                    b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("BookISBN");
 
                     b.HasIndex("CoreId");
 
                     b.ToTable("BorrowRecord");
-                });
-
-            modelBuilder.Entity("XPTOlibrary.Models.City", b =>
-                {
-                    b.Property<int>("CityId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CityId"), 1L, 1);
-
-                    b.Property<string>("CityName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("CityId");
-
-                    b.ToTable("City");
                 });
 
             modelBuilder.Entity("XPTOlibrary.Models.Cores", b =>
@@ -348,16 +346,11 @@ namespace XPTOlibrary.DataAccess.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CoreId"), 1L, 1);
 
-                    b.Property<int>("CityId")
-                        .HasColumnType("int");
-
                     b.Property<string>("CoreName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("CoreId");
-
-                    b.HasIndex("CityId");
 
                     b.ToTable("Cores");
                 });
@@ -394,6 +387,24 @@ namespace XPTOlibrary.DataAccess.Migrations
                     b.HasKey("TopicId");
 
                     b.ToTable("Topic");
+                });
+
+            modelBuilder.Entity("XPTOlibrary.Models.ApplicationUser", b =>
+                {
+                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
+
+                    b.Property<DateTime?>("Birthday")
+                        .HasColumnType("Date");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasDiscriminator().HasValue("ApplicationUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -495,6 +506,12 @@ namespace XPTOlibrary.DataAccess.Migrations
 
             modelBuilder.Entity("XPTOlibrary.Models.BorrowRecord", b =>
                 {
+                    b.HasOne("XPTOlibrary.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("XPTOlibrary.Models.BookInformation", "BookInformation")
                         .WithMany()
                         .HasForeignKey("BookISBN")
@@ -507,20 +524,11 @@ namespace XPTOlibrary.DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("ApplicationUser");
+
                     b.Navigation("BookInformation");
 
                     b.Navigation("Cores");
-                });
-
-            modelBuilder.Entity("XPTOlibrary.Models.Cores", b =>
-                {
-                    b.HasOne("XPTOlibrary.Models.City", "City")
-                        .WithMany()
-                        .HasForeignKey("CityId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("City");
                 });
 #pragma warning restore 612, 618
         }

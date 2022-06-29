@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using XPTOlibrary.DataAccess;
+﻿using XPTOlibrary.DataAccess;
 using XPTOlibrary.DataAccess.Repository.IRepository;
 using XPTOlibrary.Models;
-using System.Collections.Generic;
-
+using XPTOlibrary.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace XPTOlibrary.Controllers
 {
@@ -18,7 +21,7 @@ namespace XPTOlibrary.Controllers
         }
         public IActionResult Index()
         {
-            IEnumerable<BookCores> objBookCoresList = _unitOfWork.BookCores.GetAll();
+            IEnumerable<BookCores> objBookCoresList = _unitOfWork.BookCores.GetAll(includeProperties:"BookInformation,Cores");
             return View(objBookCoresList);
         }
         //GET
@@ -40,6 +43,42 @@ namespace XPTOlibrary.Controllers
                 return RedirectToAction("Index");
             }
             return View(obj);
+        }
+        public IActionResult Upsert(int? id)
+        {
+            BookCoresVM BookCoresVM = new()
+            {
+                BookCores = new(),
+
+                BookList = _unitOfWork.BookInformation.GetAll().Select(i => new SelectListItem
+                {
+                    Text = i.BookName,
+                    Value = i.BookISBN.ToString()
+                }),
+                CoreList = _unitOfWork.Cores.GetAll().Select(i => new SelectListItem
+                {
+                    Text = i.CoreName,
+                    Value = i.CoreId.ToString()
+                }),
+
+            };
+
+            if (id == null || id == 0)
+            {
+                //create product
+                //ViewBag.CategoryList = CategoryList;
+                //ViewData["CoverTypeList"] = CoverTypeList;
+                return View(BookCoresVM);
+            }
+            else
+            {
+                BookCoresVM.BookCores = _unitOfWork.BookCores.GetFirstOrDefault(u => u.BookCoreid == id);
+                return View(BookCoresVM);
+
+                //update product
+            }
+
+
         }
         public IActionResult Edit(int? book, int? core)
         {

@@ -12,8 +12,8 @@ using XPTOlibrary.DataAccess;
 namespace XPTOlibrary.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220625145422_borrowrecordaddapplicationuser")]
-    partial class borrowrecordaddapplicationuser
+    [Migration("20220629133505_addtables")]
+    partial class addtables
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -247,16 +247,24 @@ namespace XPTOlibrary.DataAccess.Migrations
 
             modelBuilder.Entity("XPTOlibrary.Models.BookCores", b =>
                 {
-                    b.Property<int>("BookISBN")
+                    b.Property<int>("BookCoreid")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("CoreId")
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BookCoreid"), 1L, 1);
+
+                    b.Property<int>("BookISBN")
                         .HasColumnType("int");
 
                     b.Property<int>("Copies")
                         .HasColumnType("int");
 
-                    b.HasKey("BookISBN", "CoreId");
+                    b.Property<int>("CoreId")
+                        .HasColumnType("int");
+
+                    b.HasKey("BookCoreid");
+
+                    b.HasIndex("BookISBN");
 
                     b.HasIndex("CoreId");
 
