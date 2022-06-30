@@ -1,23 +1,30 @@
-﻿@model XPTOlibrary.Models.Author
+﻿@model XPTOlibrary.Models.BookCores
 
 <form method="post" asp-action="Delete">
-    <input asp-for="AuthorId" hidden />
+    <input asp-for="BookCoreid" hidden />
     <div class="border p-3 mt-4">
         <div class="row pb-2">
-            <h2 class="text-primary">Delete Author</h2>
+            <h2 class="text-primary">Delete BookCores</h2>
             <hr />
         </div>
         @*<div asp-validation-summary="All"></div>*@
-        <div class="mb-3">
-            <label asp-for="AuthorId"></label>
-            <input asp-for="AuthorId" disabled class="form-control" />
+                <div class="mb-3">
+            <label asp-for="BookISBN"></label>
+            <input asp-for="BookISBN" class="form-control" />
+            <span asp-validation-for="BookISBN" class="text-danger"></span>
         </div>
-        <div class="mb-3">
-            <label asp-for="AuthorName"></label>
-            <input asp-for="AuthorName" disabled class="form-control" />
+                <div class="mb-3">
+            <label asp-for="CoreId"></label>
+            <input asp-for="CoreId" class="form-control" />
+            <span asp-validation-for="CoreId" class="text-danger"></span>
+        </div>
+                <div class="mb-3">
+            <label asp-for="Copies"></label>
+            <input asp-for="Copies" class="form-control" />
+            <span asp-validation-for="Copies" class="text-danger"></span>
         </div>
         <button type="submit" class="btn btn-danger" style="width:150px">Delete</button>
-        <a asp-controller="Author" asp-action="Index" class="btn btn-secondary" style="width:150px">
+        <a asp-controller="BookCores" asp-action="Index" class="btn btn-secondary" style="width:150px">
             Back to List
         </a>
     </div>

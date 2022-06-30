@@ -7,8 +7,8 @@ using XPTOlibrary.Models;
 
 namespace XPTOlibrary.DataAccess.Repository.IRepository
 {
-    public interface IBorrowRecordRepository : IRepository<BorrowRecord>
+    public interface IBorrowRecordRepository : IRepository<Bookcore>
     {
-        void Update(BorrowRecord obj);
+        void Update(Bookcore obj);
     }
 }

@@ -3,16 +3,17 @@ using XPTOlibrary.DataAccess;
 using XPTOlibrary.DataAccess.Repository.IRepository;
 using XPTOlibrary.Models;
 using System.Collections.Generic;
-
+using Microsoft.AspNetCore.Identity;
 
 namespace XPTOlibrary.Controllers
 {
     [Area("Admin")]
-    public class ApplicationUserController : Controller
+    public class UserController : Controller
     {
         private readonly IUnitofWork _unitOfWork;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public ApplicationUserController(IUnitofWork unitOfWork)
+        public UserController(IUnitofWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
@@ -21,44 +22,32 @@ namespace XPTOlibrary.Controllers
             IEnumerable<ApplicationUser> objApplicationUserList = _unitOfWork.ApplicationUser.GetAll();
             return View(objApplicationUserList);
         }
+        //public IActionResult Index()
+        //{
+        //    var user = _userManager.Users;
+        //    return View(user.ToList());
+        //}
         //GET
-        public IActionResult Create()
 
-        {
-            return View();
-        }
-        //POST
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Create(Author obj)
-        {
-            if (ModelState.IsValid)
-            {
-                _unitOfWork.Author.Add(obj);
-                _unitOfWork.Save();
-                TempData["success"] = "Author added successfully";
-                return RedirectToAction("Index");
-            }
-            return View(obj);
-        }
-        public IActionResult Edit(int? id)
+
+        public IActionResult Reactivate(int? id)
         {
             if(id == null|| id == 0)
             {
                 return NotFound();
             }
-            var AuthorFromDB = _unitOfWork.Author.GetFirstOrDefault(x => x.AuthorId == id);
-            return View(AuthorFromDB);
+            var ApplicationUserFromDB = _unitOfWork.ApplicationUser.GetFirstOrDefault(x => x.ApplicationUserId == id);
+            return View(ApplicationUserFromDB);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(Author obj)
+        public IActionResult Edit(ApplicationUser obj)
         {
             if (ModelState.IsValid)
             {
-                _unitOfWork.Author.Update(obj);
+                _unitOfWork.ApplicationUser.Update(obj);
                 _unitOfWork.Save();
-                TempData["success"] = "Author updated successfully";
+                TempData["success"] = "ApplicationUser updated successfully";
                 return RedirectToAction("Index");
             }
             return View(obj);
@@ -69,14 +58,14 @@ namespace XPTOlibrary.Controllers
             {
                 return NotFound();
             }
-            var AuthorFromDbFirst = _unitOfWork.Author.GetFirstOrDefault(u => u.AuthorId == id);
+            var ApplicationUserFromDbFirst = _unitOfWork.ApplicationUser.GetFirstOrDefault(u => u.ApplicationUserId == id);
 
-            if (AuthorFromDbFirst == null)
+            if (ApplicationUserFromDbFirst == null)
             {
                 return NotFound();
             }
 
-            return View(AuthorFromDbFirst);
+            return View(ApplicationUserFromDbFirst);
         }
 
         //POST
@@ -84,15 +73,15 @@ namespace XPTOlibrary.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeletePOST(int? id)
         {
-            var obj = _unitOfWork.Author.GetFirstOrDefault(u => u.AuthorId == id);
+            var obj = _unitOfWork.ApplicationUser.GetFirstOrDefault(u => u.ApplicationUserId == id);
             if (obj == null)
             {
                 return NotFound();
             }
 
-            _unitOfWork.Author.Remove(obj);
+            _unitOfWork.ApplicationUser.Remove(obj);
             _unitOfWork.Save();
-            TempData["success"] = "Author deleted successfully";
+            TempData["success"] = "ApplicationUser deleted successfully";
             return RedirectToAction("Index");
 
         }

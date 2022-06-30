@@ -1,4 +1,4 @@
-﻿@model IEnumerable<XPTOlibrary.Models.BorrowRecord>;
+﻿@model IEnumerable<XPTOlibrary.Models.Bookcore>;
 @{
     ViewData["Title"] = "Index";
     string Record_Borrowed = "Borrowed";
@@ -43,15 +43,15 @@
 
                         @if (@obj.DateReturn == null)
                         {
-                            @if (@obj.DateBorrow.AddDays(10) < DateTime.Today)
+                            @if (@obj.DateBorrow.AddDays(10) > DateTime.Today)
                             {
                                 @Record_Borrowed
                             }
-                            @if (@obj.DateBorrow.AddDays(10) > DateTime.Today && @obj.DateBorrow.AddDays(12) < DateTime.Today)
+                            @if (@obj.DateBorrow.AddDays(10) < DateTime.Today && @obj.DateBorrow.AddDays(12) > DateTime.Today)
                             {
                                 @Record_ReturnSoon
                             }
-                            @if (@obj.DateBorrow.AddDays(12) > DateTime.Today && @obj.DateBorrow.AddDays(15) < DateTime.Today)
+                            @if (@obj.DateBorrow.AddDays(12) < DateTime.Today && @obj.DateBorrow.AddDays(15) > DateTime.Today)
                             {
                                 @Record_Urgent
                             }

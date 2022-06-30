@@ -15,8 +15,8 @@
 
                         <div class="row pl-2">
                             <h5 class="text-muted">Book ISBN : @Model.BookInformation.BookISBN</h5>
-                            <h5 class="text-muted">Publisher : @Model.BookInformation.Publisher</h5>
-                            <h5 class="text-muted">Topic: @Model.BookInformation.Topic</h5>
+                            <h5 class="text-muted">Publisher : @Model.BookInformation.Publisher.PublisherName</h5>
+                            <h5 class="text-muted">Topic: @Model.BookInformation.Topic.TopicName</h5>
                             @foreach(var bookcore in Model.BookCores){
                             <h5 class="text-muted">Core : @bookcore.Cores.CoreName</h5>
                             <h5 class="text-muted">Available Copies : @bookcore.Copies</h5>

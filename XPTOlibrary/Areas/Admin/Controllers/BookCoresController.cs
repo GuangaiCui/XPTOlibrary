@@ -80,18 +80,15 @@ namespace XPTOlibrary.Controllers
 
 
         }
-        public IActionResult Edit(int? book, int? core)
+        //Get
+        public IActionResult Edit(int? id)
         {
-            if(book == null|| book == 0)
+            if(id == null|| id == 0)
             {
                 return NotFound();
             }
-            if(core == null || core == 0)
-            {
-                return NotFound();
-            }
-            var BookCoresFromDB = _unitOfWork.BookCores.GetFirstOrDefault(x => x.BookISBN == book && 
-            x.CoreId==core);
+
+            var BookCoresFromDB = _unitOfWork.BookCores.GetFirstOrDefault(x => x.BookCoreid == id);
             return View(BookCoresFromDB);
         }
         [HttpPost]
@@ -113,7 +110,7 @@ namespace XPTOlibrary.Controllers
             {
                 return NotFound();
             }
-            var BookCoresFromDbFirst = _unitOfWork.BookCores.GetFirstOrDefault(u => u.CoreId == id);
+            var BookCoresFromDbFirst = _unitOfWork.BookCores.GetFirstOrDefault(u => u.BookCoreid == id);
 
             if (BookCoresFromDbFirst == null)
             {
