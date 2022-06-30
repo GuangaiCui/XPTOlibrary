@@ -45,6 +45,7 @@ namespace XPTOlibrary.Controllers
         {
             if (ModelState.IsValid)
             {
+                obj.Status = "Normal";
                 _unitOfWork.ApplicationUser.Update(obj);
                 _unitOfWork.Save();
                 TempData["success"] = "ApplicationUser updated successfully";

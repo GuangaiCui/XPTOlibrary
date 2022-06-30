@@ -151,14 +151,14 @@ namespace XPTOlibrary.Areas.Identity.Pages.Account
                     _logger.LogInformation("User created a new account with password.");
                     if (Input.Role == null)
                     {
-                        user.Status = "Normal";
+                        user.Status = UserStatus.Status_Normal;
                         await _userManager.AddToRoleAsync(user,SD.Role_User);
                     }
                     else
                     {
                         if (Input.Role == SD.Role_User)
                         {
-                            user.Status = "Normal";
+                            user.Status = UserStatus.Status_Normal;
                         }
                         else
                         {
