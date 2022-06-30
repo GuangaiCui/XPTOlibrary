@@ -14,6 +14,9 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using XPTOlibrary.Models;
+using XPTOlibrary.DataAccess.Repository.IRepository;
+using XPTOlibrary.DataAccess.Repository;
 
 namespace XPTOlibrary.Areas.Identity.Pages.Account
 {
@@ -21,11 +24,13 @@ namespace XPTOlibrary.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
+        private readonly IUnitofWork _unitOfWork;
 
-        public LoginModel(SignInManager<IdentityUser> signInManager, ILogger<LoginModel> logger)
+        public LoginModel(SignInManager<IdentityUser> signInManager, ILogger<LoginModel> logger, IUnitofWork unitOfWork)
         {
             _signInManager = signInManager;
             _logger = logger;
+            _unitOfWork = unitOfWork;
         }
 
         /// <summary>
@@ -115,6 +120,9 @@ namespace XPTOlibrary.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
+                //here for userstatus
+                //IEnumerable <Bookcore> borrowRecord = _unitOfWork.BorrowRecord.GetAll(u => u.ApplicationUserId == userId);
+
                     return LocalRedirect(returnUrl);
                 }
                 if (result.RequiresTwoFactor)

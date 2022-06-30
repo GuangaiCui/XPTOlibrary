@@ -18,9 +18,18 @@ public class HomeController : Controller
         _unitOfWork = unitOfWork;
     }
 
-    public IActionResult Index()
+    public IActionResult Index(string? searchString)
     {
-        IEnumerable<BookInformation> BookInformationList = _unitOfWork.BookInformation.GetAll(includeProperties: "Publisher,Author,Topic");
+        IEnumerable<BookInformation> BookInformationList;
+        if (searchString == null)
+        {
+            BookInformationList = _unitOfWork.BookInformation.GetAll(includeProperties: "Publisher,Author,Topic");
+        }
+        else
+        {
+            BookInformationList = _unitOfWork.BookInformation.GetAll(u => u.BookName.Contains(searchString) || u.Author.AuthorName.Contains(searchString)
+                                                                     || u.Publisher.PublisherName.Contains(searchString) || u.Topic.TopicName.Contains(searchString),includeProperties: "Publisher,Author,Topic");
+        }
 
         return View(BookInformationList);
 

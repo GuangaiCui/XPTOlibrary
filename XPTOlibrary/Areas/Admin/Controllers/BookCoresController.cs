@@ -35,6 +35,22 @@ namespace XPTOlibrary.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(BookCores obj)
         {
+            BookCoresVM BookCoresVM = new()
+            {
+                BookCores = new(),
+
+                BookList = _unitOfWork.BookInformation.GetAll().Select(i => new SelectListItem
+                {
+                    Text = i.BookName,
+                    Value = i.BookISBN.ToString()
+                }),
+                CoreList = _unitOfWork.Cores.GetAll().Select(i => new SelectListItem
+                {
+                    Text = i.CoreName,
+                    Value = i.CoreId.ToString()
+                }),
+
+            };
             if (ModelState.IsValid)
             {
                 _unitOfWork.BookCores.Add(obj);

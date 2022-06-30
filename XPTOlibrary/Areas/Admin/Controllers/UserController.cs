@@ -36,8 +36,8 @@ namespace XPTOlibrary.Controllers
             {
                 return NotFound();
             }
-            var ApplicationUserFromDB = _unitOfWork.ApplicationUser.GetFirstOrDefault(x => x.ApplicationUserId == id);
-            return View(ApplicationUserFromDB);
+            //var ApplicationUserFromDB = _unitOfWork.ApplicationUser.GetFirstOrDefault(x => x.ApplicationUserId == id);
+            return View();
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -59,14 +59,14 @@ namespace XPTOlibrary.Controllers
             {
                 return NotFound();
             }
-            var ApplicationUserFromDbFirst = _unitOfWork.ApplicationUser.GetFirstOrDefault(u => u.ApplicationUserId == id);
+            //var ApplicationUserFromDbFirst = _unitOfWork.ApplicationUser.GetFirstOrDefault(u => u.ApplicationUserId == id);
 
-            if (ApplicationUserFromDbFirst == null)
-            {
-                return NotFound();
-            }
+            //if (ApplicationUserFromDbFirst == null)
+            //{
+            //    return NotFound();
+            //}
 
-            return View(ApplicationUserFromDbFirst);
+            return View();
         }
 
         //POST
@@ -74,15 +74,15 @@ namespace XPTOlibrary.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeletePOST(int? id)
         {
-            var obj = _unitOfWork.ApplicationUser.GetFirstOrDefault(u => u.ApplicationUserId == id);
-            if (obj == null)
-            {
-                return NotFound();
-            }
+            //var obj = _unitOfWork.ApplicationUser.GetFirstOrDefault(u => u.ApplicationUserId == id);
+            //if (obj == null)
+            //{
+            //    return NotFound();
+            //}
 
-            _unitOfWork.ApplicationUser.Remove(obj);
-            _unitOfWork.Save();
-            TempData["success"] = "ApplicationUser deleted successfully";
+            //_unitOfWork.ApplicationUser.Remove(obj);
+            //_unitOfWork.Save();
+            //TempData["success"] = "ApplicationUser deleted successfully";
             return RedirectToAction("Index");
 
         }
