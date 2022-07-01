@@ -11,14 +11,16 @@ namespace XPTOlibrary.Controllers
     public class UserController : Controller
     {
         private readonly IUnitofWork _unitOfWork;
-        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public UserController(IUnitofWork unitOfWork)
+        public UserController(IUnitofWork unitOfWork, UserManager<IdentityUser> userManager)
         {
             _unitOfWork = unitOfWork;
+            _userManager = userManager;
         }
         public IActionResult Index()
         {
+            _userManager.GetUserId(User);
             IEnumerable<ApplicationUser> objApplicationUserList = _unitOfWork.ApplicationUser.GetAll();
             return View(objApplicationUserList);
         }
@@ -30,7 +32,7 @@ namespace XPTOlibrary.Controllers
         //GET
 
 
-        public IActionResult Reactivate(int? id)
+        public IActionResult Edit(int? id)
         {
             if(id == null|| id == 0)
             {
@@ -43,6 +45,7 @@ namespace XPTOlibrary.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Edit(ApplicationUser obj)
         {
+            //var userId = _userManager.GetUserId;
             if (ModelState.IsValid)
             {
                 obj.Status = "Normal";

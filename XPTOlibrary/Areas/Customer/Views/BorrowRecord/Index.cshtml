@@ -23,18 +23,19 @@
 
     <table class="table table-bordered table-striped" style="width:100%">
         <thead>
-
+        <th>User Id</th>
         <th>BookName</th>
         <th>CoreName</th>
-        <th>Date Borrowed</th>
-        <th>Date Returned</th>
+        <th>Time Borrowed</th>
+        <th>Time Returned</th>
         <th>Status</th>
         <th></th>
-        </thead>
+        </th>
         <tbody>
             @foreach (var obj in Model)
             {
                 <tr>
+                    <td>@obj.ApplicationUserId</td>
                     <td>@obj.BookInformation.BookName</td>
                     <td>@obj.Cores.CoreName</td>
                     <td>@obj.DateBorrow</td>
@@ -79,4 +80,5 @@
             }
         </tbody>
     </table>
+    </div>
 

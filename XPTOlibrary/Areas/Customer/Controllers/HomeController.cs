@@ -11,11 +11,14 @@ public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
     private readonly IUnitofWork _unitOfWork;
-    //private readonly UserManager<ApplicationUser> _userManager;
-    public HomeController(ILogger<HomeController> logger, IUnitofWork unitOfWork)
+    private readonly SignInManager<IdentityUser> _signInManager;
+    private readonly UserManager<IdentityUser> _userManager;
+    public HomeController(ILogger<HomeController> logger, IUnitofWork unitOfWork, SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager)
     {
         _logger = logger;
         _unitOfWork = unitOfWork;
+        _signInManager = signInManager;
+        _userManager = userManager;
     }
 
     public IActionResult Index(string? searchString)
@@ -28,7 +31,7 @@ public class HomeController : Controller
         else
         {
             BookInformationList = _unitOfWork.BookInformation.GetAll(u => u.BookName.Contains(searchString) || u.Author.AuthorName.Contains(searchString)
-                                                                     || u.Publisher.PublisherName.Contains(searchString) || u.Topic.TopicName.Contains(searchString),includeProperties: "Publisher,Author,Topic");
+                                                                     || u.Publisher.PublisherName.Contains(searchString) || u.Topic.TopicName.Contains(searchString), includeProperties: "Publisher,Author,Topic");
         }
 
         return View(BookInformationList);
@@ -46,12 +49,21 @@ public class HomeController : Controller
         return View(bookwithCores);
     }
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public IActionResult Borrow(int id)
     {
-        string userId = "1abd";
+        var userId = "";
+        if (_signInManager.IsSignedIn(User))
+        {
+            userId = _userManager.GetUserId(User);
+        }
+        else
+        {
+            return View();
+        }
         int countOfBorrowed = 0;
         IEnumerable<Bookcore> borrowRecord = _unitOfWork.BorrowRecord.GetAll(u => u.ApplicationUserId == userId);
-        BookCores BookCores = _unitOfWork.BookCores.GetFirstOrDefault(u => u.BookCoreid==id);
+        BookCores BookCores = _unitOfWork.BookCores.GetFirstOrDefault(u => u.BookCoreid == id);
         ApplicationUser applicationUser = null;
         foreach (var record in borrowRecord)
         {
