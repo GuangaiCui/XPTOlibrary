@@ -21,7 +21,7 @@ public class ApplicationDbContext :IdentityDbContext
     public DbSet<Author> Author { get; set; }
     public DbSet<BookCores> BookCores { get; set; }
     public DbSet<BookInformation> BookInformation { get; set; }
-    public DbSet<Bookcore> BorrowRecord { get; set; }
+    public DbSet<BorrowRecord> BorrowRecord { get; set; }
     public DbSet<Cores> Cores { get; set; }
     public DbSet<Publisher> Publisher { get; set; }
     public DbSet<Topic> Topic { get; set; }

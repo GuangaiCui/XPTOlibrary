@@ -29,7 +29,7 @@ public class BorrowRecordController : Controller
         {
             userId = _userManager.GetUserId(User);
         }
-        IEnumerable<Bookcore> BorrowRecordList;
+        IEnumerable<BorrowRecord> BorrowRecordList;
         if (User.IsInRole(SD.Role_User))
         {
             //var user = UserManager.FindById(User.Identity.GetUserId());
@@ -47,10 +47,23 @@ public class BorrowRecordController : Controller
     }
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Return(int id)
+    public async Task<IActionResult> Return(int id)
     {
-        Bookcore borrowRecord = _unitOfWork.BorrowRecord.GetFirstOrDefault(u=>u.RecordId == id);
-        borrowRecord.DateReturn= DateTime.Now;
+        var userId = "";
+        BorrowRecord borrowRecord;
+        borrowRecord = _unitOfWork.BorrowRecord.GetFirstOrDefault(u => u.RecordId == id);
+        
+        if (_signInManager.IsSignedIn(User))
+        {
+            userId = _userManager.GetUserId(User);
+            if(userId == borrowRecord.ApplicationUserId||User.IsInRole(SD.Role_Admin))
+            {
+                borrowRecord.DateReturn = DateTime.Now;
+                _unitOfWork.Save();
+                TempData["success"] = "Returned successfully";
+            }
+        }
+        
         return RedirectToAction("Index");
     }
 

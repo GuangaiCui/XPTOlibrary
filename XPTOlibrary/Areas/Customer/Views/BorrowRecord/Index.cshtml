@@ -1,4 +1,4 @@
-﻿@model IEnumerable<XPTOlibrary.Models.Bookcore>;
+﻿@model IEnumerable<XPTOlibrary.Models.BorrowRecord>
 @{
     ViewData["Title"] = "Index";
     string Record_Borrowed = "Borrowed";
@@ -70,10 +70,11 @@
                     <td>
                          @if (@obj.DateReturn == null)
                         {
-                            <div class="w-75 btn-group" role="group">
-                            <a asp-controller="BookBorrow" asp-action="Return" asp-route-id="@obj.RecordId"
-                           class="btn btn-primary mx-2"> Return</a>
-                        </div>
+                         <form asp-action="Return" asp-route-id="@obj.RecordId">
+                        <input type="submit" value="Return" class="btn btn-danger" />
+                        </form>
+
+
                         }
                     </td>
                 </tr>

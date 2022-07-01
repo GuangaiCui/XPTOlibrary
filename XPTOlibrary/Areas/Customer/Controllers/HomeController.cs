@@ -62,7 +62,7 @@ public class HomeController : Controller
             return View();
         }
         int countOfBorrowed = 0;
-        IEnumerable<Bookcore> borrowRecord = _unitOfWork.BorrowRecord.GetAll(u => u.ApplicationUserId == userId);
+        IEnumerable<BorrowRecord> borrowRecord = _unitOfWork.BorrowRecord.GetAll(u => u.ApplicationUserId == userId);
         BookCores BookCores = _unitOfWork.BookCores.GetFirstOrDefault(u => u.BookCoreid == id);
         ApplicationUser applicationUser = null;
         foreach (var record in borrowRecord)

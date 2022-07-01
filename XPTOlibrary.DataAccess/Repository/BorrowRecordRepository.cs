@@ -8,7 +8,7 @@ using XPTOlibrary.Models;
 
 namespace XPTOlibrary.DataAccess.Repository
 {
-    public class BorrowRecordRepository : Repository<Bookcore>, IBorrowRecordRepository
+    public class BorrowRecordRepository : Repository<BorrowRecord>, IBorrowRecordRepository
     {
         private ApplicationDbContext _db;
 
@@ -18,7 +18,7 @@ namespace XPTOlibrary.DataAccess.Repository
         }
 
 
-        public void Update(Bookcore obj)
+        public void Update(BorrowRecord obj)
         {
             _db.BorrowRecord.Update(obj);
         }

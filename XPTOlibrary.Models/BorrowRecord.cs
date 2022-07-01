@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace XPTOlibrary.Models
 {
-    public class Bookcore
+    public class BorrowRecord
     {
         [Key]
         public int RecordId { get; set; }
