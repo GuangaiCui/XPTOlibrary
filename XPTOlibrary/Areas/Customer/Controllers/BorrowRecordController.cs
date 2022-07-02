@@ -52,13 +52,14 @@ public class BorrowRecordController : Controller
         var userId = "";
         BorrowRecord borrowRecord;
         borrowRecord = _unitOfWork.BorrowRecord.GetFirstOrDefault(u => u.RecordId == id);
-        
+        BookCores bookcore = _unitOfWork.BookCores.GetFirstOrDefault(u=>u.BookISBN == borrowRecord.BookISBN&&u.CoreId==borrowRecord.CoreId);
         if (_signInManager.IsSignedIn(User))
         {
             userId = _userManager.GetUserId(User);
             if(userId == borrowRecord.ApplicationUserId||User.IsInRole(SD.Role_Admin))
             {
                 borrowRecord.DateReturn = DateTime.Now;
+                bookcore.Copies += 1;
                 _unitOfWork.Save();
                 TempData["success"] = "Returned successfully";
             }

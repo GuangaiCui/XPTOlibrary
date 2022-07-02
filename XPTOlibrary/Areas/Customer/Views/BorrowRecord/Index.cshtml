@@ -52,9 +52,7 @@
                                 @Record_ReturnSoon
                             }
                             @if (@obj.DateBorrow.AddDays(12) < DateTime.Today && @obj.DateBorrow.AddDays(15) > DateTime.Today)
-                            {
                                 @Record_Urgent
-                            }
                             @if (@obj.DateBorrow.AddDays(15) < DateTime.Today)
                             {
                                 @Record_Delayed
@@ -62,9 +60,9 @@
 
                         }
                         else
-                        {
+                        
                             @Record_Returned
-                        }
+                        
                     </td>
                     <td>
                          @if (@obj.DateReturn == null)
