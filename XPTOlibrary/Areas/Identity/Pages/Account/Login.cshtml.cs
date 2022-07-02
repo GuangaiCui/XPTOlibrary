@@ -125,45 +125,56 @@ namespace XPTOlibrary.Areas.Identity.Pages.Account
                     _logger.LogInformation("User logged in.");
                     //here for userstatus
                     //IEnumerable <Bookcore> borrowRecord = _unitOfWork.BorrowRecord.GetAll(u => u.ApplicationUserId == userId);
-                    string userid = _userManager.GetUserId(User);
-                    var user = _unitOfWork.ApplicationUser.GetFirstOrDefault(u => u.Id == userid);
-                    IEnumerable<BorrowRecord> borrowRecords = _unitOfWork.BorrowRecord.GetAll(u => u.ApplicationUserId == userid).OrderByDescending(s => s.DateBorrow);
+                    //string userid = _userManager.GetUserId(User);
+                    var user = _unitOfWork.ApplicationUser.GetFirstOrDefault(u => u.UserName == Input.Email);
+                    var roles = await _userManager.GetRolesAsync(user).ConfigureAwait(false);
+
+                    IEnumerable<BorrowRecord> borrowRecords = _unitOfWork.BorrowRecord.GetAll(u => u.ApplicationUserId == user.Id).OrderByDescending(s => s.DateBorrow);
                     BorrowRecord latestBorrowRecord = borrowRecords.First();
-                    if (User.IsInRole(SD.Role_User))
+                    int delayedCount = 0;
+                    
+                    foreach (var role in roles)
                     {
-                        if (latestBorrowRecord.DateBorrow.AddYears(1) < DateTime.Today)
+                        //an user might have multiple roles
+                        if (role == SD.Role_User)
                         {
-                            user.Status = UserStatus.Status_Hibernate;
-                            _logger.LogInformation("User Hibernated.");
+                            if (latestBorrowRecord == null && user.RegisterTime.AddYears(1) > DateTime.Today)
+                            {
+                                break;
+                            }
+                            else
+                            {
+                                if (user.RegisterTime.AddYears(1) < DateTime.Today || latestBorrowRecord.DateBorrow.AddYears(1) < DateTime.Today)
+                                {
+                                    user.Status = UserStatus.Status_Hibernate;
+                                    _logger.LogInformation("User Hibernated.");
+
+                                }
+                                else
+                                {
+                                    foreach (var record in borrowRecords)
+                                    {
+                                        if (record.DateBorrow.AddDays(15) < record.DateReturn || record.DateBorrow.AddDays(15) < DateTime.Today)
+                                        {
+                                            delayedCount++;
+
+                                            if (delayedCount == 4)
+                                            {
+                                                user.Status = UserStatus.Status_Paused;
+                                                _logger.LogInformation("User Paused.");
+                                                break;
+                                            }
+
+                                        }
+                                    }
+
+                                }
+                            }
                         }
-                        foreach (var record in borrowRecords)
-                        {
-                            //if()
-                        }
-
-
-            //int countOfBorrowed = 0;
-
-            //foreach (var record in borrowRecord)
-            //{
-            //    if (record.DateReturn == null)
-            //    {
-            //        countOfBorrowed++;
-
-                            //        if (countOfBorrowed == 4)
-                            //        {
-                            //            break;
-                            //        }
-                            //        return RedirectToAction("Index");
-                            //    }
-                            //}
-                            //borrow failed
-
-                            //if (record.DateBorrow.AddDays(15) > record.DateReturn || record.DateBorrow.AddDays(15) > DateTime.Today
-
                     }
                     return LocalRedirect(returnUrl);
                 }
+
                 if (result.RequiresTwoFactor)
                 {
                     return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
@@ -185,3 +196,4 @@ namespace XPTOlibrary.Areas.Identity.Pages.Account
         }
     }
 }
+
