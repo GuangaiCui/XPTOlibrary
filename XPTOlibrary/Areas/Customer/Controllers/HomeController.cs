@@ -4,6 +4,7 @@ using System.Diagnostics;
 using XPTOlibrary.DataAccess.Repository.IRepository;
 using XPTOlibrary.Models;
 using XPTOlibrary.Models.ViewModels;
+using XPTOlibrary.Utility;
 
 namespace XPTOlibrary.Controllers;
 [Area("Customer")]
@@ -50,52 +51,68 @@ public class HomeController : Controller
     }
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Borrow(int id)
+    public async Task< IActionResult>  Borrow(int id)
     {
         var userId = "";
+        ApplicationUser applicationUser = _unitOfWork.ApplicationUser.GetFirstOrDefault(u => u.Id == userId);
+        BookCores bookCores = _unitOfWork.BookCores.GetFirstOrDefault(u => u.BookCoreid == id, includeProperties: "BookInformation,Cores");
+
         if (_signInManager.IsSignedIn(User))
         {
             userId = _userManager.GetUserId(User);
-        }
-        else
-        {
-            return View();
-        }
-        int countOfBorrowed = 0;
-        IEnumerable<BorrowRecord> borrowRecord = _unitOfWork.BorrowRecord.GetAll(u => u.ApplicationUserId == userId);
-        BookCores BookCores = _unitOfWork.BookCores.GetFirstOrDefault(u => u.BookCoreid == id);
-        ApplicationUser applicationUser = null;
-        foreach (var record in borrowRecord)
-        {
-            if (record.DateReturn == null)
-            {
-                countOfBorrowed++;
 
-                if (countOfBorrowed == 4)
+
+            //int countOfBorrowed = 0;
+            //IEnumerable<BorrowRecord> borrowRecord = _unitOfWork.BorrowRecord.GetAll(u => u.ApplicationUserId == userId);
+            //BookCores BookCores = _unitOfWork.BookCores.GetFirstOrDefault(u => u.BookCoreid == id);
+            //ApplicationUser applicationUser = null;
+            //foreach (var record in borrowRecord)
+            //{
+            //    if (record.DateReturn == null)
+            //    {
+            //        countOfBorrowed++;
+
+            //        if (countOfBorrowed == 4)
+            //        {
+            //            break;
+            //        }
+            //        return RedirectToAction("Index");
+            //    }
+            //}
+            //borrow failed
+            //alert("maximum of 4 books")
+            //if (record.DateBorrow.AddDays(15) > record.DateReturn || record.DateBorrow.AddDays(15) > DateTime.Today
+            //ApplicationUser applicationUser = _unitOfWork.ApplicationUser.GetFirstOrDefault(u => u.ApplicationUserId == userId);
+            //var user = UserManager.FindById(User.Identity.GetUserId());
+
+
+            if (User.IsInRole(SD.Role_User)&&applicationUser.Status == "Normal")
+            {
+                if (bookCores.Copies > 1)
                 {
-                    break;
+                    bookCores.Copies -= 1;
+                    //borrow succeed
+
+                    BorrowRecord borrowRecord = new BorrowRecord()
+                    {
+                        BookISBN = bookCores.BookISBN,
+                        ApplicationUserId = userId,
+                        CoreId = bookCores.CoreId,
+                        DateBorrow = DateTime.Now,
+                        DateReturn = null
+                    };
+                    _unitOfWork.BorrowRecord.Add(borrowRecord);
+                    TempData["sucess"] = "Borrow succeed!";
                 }
-                return RedirectToAction("Index");
+                else
+                {
+                    TempData["failed"] = "Borrow failed";
+                }
             }
+
+            _unitOfWork.Save();
         }
-        //borrow failed
-        //alert("maximum of 4 books")
-        //if (record.DateBorrow.AddDays(15) > record.DateReturn || record.DateBorrow.AddDays(15) > DateTime.Today
-        //ApplicationUser applicationUser = _unitOfWork.ApplicationUser.GetFirstOrDefault(u => u.ApplicationUserId == userId);
-        //var user = UserManager.FindById(User.Identity.GetUserId());
-
-
-        if (applicationUser.Status == "Normal")
-        {
-
-
-            if (BookCores.Copies > 1)
-            {
-                BookCores.Copies -= 1;
-                //borrow succeed
-            }
-        }
-        return View();
+        return RedirectToAction("Index");
     }
 
 

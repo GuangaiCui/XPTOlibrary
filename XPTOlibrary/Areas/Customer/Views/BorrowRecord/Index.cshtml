@@ -8,7 +8,6 @@
     string Record_Returned = "Returned";
 }
 
-
 <partial name="_Notification" />
 
 <div class="container p-3">
@@ -82,4 +81,8 @@
         </tbody>
     </table>
     </div>
-
+@section Scripts{
+	@{
+		<partial name="_ValidationScriptsPartial" />
+	}
+}

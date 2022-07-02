@@ -62,6 +62,12 @@ public class BorrowRecordController : Controller
                 _unitOfWork.Save();
                 TempData["success"] = "Returned successfully";
             }
+            TempData["error"] = "Return failed";
+            
+        }
+        else
+        {
+            TempData["error"] = "Please login first";
         }
         
         return RedirectToAction("Index");
