@@ -5,7 +5,7 @@
         <div class="card-header bg-primary text-light ml-0  row ">
             <div class="col-12 col-md-6">
                 <h1 class="text-white-50">@Model.BookInformation.BookName</h1>
-                <p class="text-warning">by @Model.BookInformation.Author</p>
+                <p class="text-warning">by @Model.BookInformation.Author.AuthorName</p>
             </div>
         </div>
         <div class="card-body row container">
@@ -20,10 +20,10 @@
                             @foreach (var bookcore in Model.BookCores)
                             {
                                 <h5>Core : @bookcore.Cores.CoreName</h5>
-                                <a asp-controller="Home" asp-action="BookCores" asp-route-id="@bookcore.BookCoreid"
-                               class="btn btn-primary mx-2"> @bookcore.Cores.CoreName</a>
                                 <h5>Available Copies : @bookcore.Copies</h5>
-                                <a class="btn btn-primary mx-1" style="width:50%;" asp-action="Borrow" asp-route-id="@bookcore.BookCoreid">Borrow</a>
+                                <form asp-controller="Home" asp-action="Borrow" asp-route-id="@bookcore.BookCoreid">
+                                    <input type="submit" value="Borrow" class="btn btn-danger mx-2" />
+                                </form>
                             }
                         </div>
                     </div>

@@ -25,12 +25,14 @@ namespace XPTOlibrary.Areas.Identity.Pages.Account
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
         private readonly IUnitofWork _unitOfWork;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public LoginModel(SignInManager<IdentityUser> signInManager, ILogger<LoginModel> logger, IUnitofWork unitOfWork)
+        public LoginModel(SignInManager<IdentityUser> signInManager, ILogger<LoginModel> logger, IUnitofWork unitOfWork, UserManager<IdentityUser> userManager)
         {
             _signInManager = signInManager;
             _logger = logger;
             _unitOfWork = unitOfWork;
+            _userManager = userManager;
         }
 
         /// <summary>
@@ -120,8 +122,10 @@ namespace XPTOlibrary.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
-                //here for userstatus
-                //IEnumerable <Bookcore> borrowRecord = _unitOfWork.BorrowRecord.GetAll(u => u.ApplicationUserId == userId);
+                    //here for userstatus
+                    //IEnumerable <Bookcore> borrowRecord = _unitOfWork.BorrowRecord.GetAll(u => u.ApplicationUserId == userId);
+                    string userid = _userManager.GetUserId(User);
+                    IEnumerable<BorrowRecord> borrowRecords = _unitOfWork.BorrowRecord.GetAll(u => u.ApplicationUserId == userid).OrderByDescending(s=>s.DateBorrow);
 
                     return LocalRedirect(returnUrl);
                 }

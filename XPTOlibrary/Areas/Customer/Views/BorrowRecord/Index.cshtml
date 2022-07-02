@@ -23,6 +23,7 @@
     <table class="table table-bordered table-striped" style="width:100%">
         <thead>
         <th>User Id</th>
+        @*<th>User Name</th>*@
         <th>BookName</th>
         <th>CoreName</th>
         <th>Time Borrowed</th>
@@ -35,6 +36,7 @@
             {
                 <tr>
                     <td>@obj.ApplicationUserId</td>
+                    @*<td>@obj.ApplicationUserName</td>*@
                     <td>@obj.BookInformation.BookName</td>
                     <td>@obj.Cores.CoreName</td>
                     <td>@obj.DateBorrow</td>

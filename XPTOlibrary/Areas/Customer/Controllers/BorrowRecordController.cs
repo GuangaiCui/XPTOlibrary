@@ -35,7 +35,7 @@ public class BorrowRecordController : Controller
             //var user = UserManager.FindById(User.Identity.GetUserId());
 
             //var current_User = _userManager.GetUserAsync(HttpContext.User);
-            BorrowRecordList = _unitOfWork.BorrowRecord.GetAll(u => u.ApplicationUserId == userId, includeProperties: "BookInformation,Cores");
+            BorrowRecordList = _unitOfWork.BorrowRecord.GetAll(u => u.ApplicationUserId == userId, includeProperties: "BookInformation,ApplicationUser,Cores").OrderByDescending(s=>s.DateBorrow);
         }
         else
         {
