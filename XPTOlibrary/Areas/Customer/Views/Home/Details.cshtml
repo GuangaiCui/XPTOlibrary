@@ -17,27 +17,14 @@
                             <h5>Book ISBN : @Model.BookInformation.BookISBN</h5>
                             <h5>Publisher : @Model.BookInformation.Publisher.PublisherName</h5>
                             <h5>Topic: @Model.BookInformation.Topic.TopicName</h5>
-                                @foreach (var bookcore in Model.BookCores)
-                                {
-                                    @*                                <table>
-                                        <thead>
-                                        <th>Core</th>
-                                        <th>Copies</th>
-                                        <th></th>
-                                        </thead>
-                                        <tr>
-                                        <td>@bookcore.Cores.CoreName</td>
-                                        <td>@bookcore.Copies</td>
-                                        <td>
-                                        <a asp-action="Borrow" class="btn btn-primary form-control" asp-route-id="@bookcore.BookCoreid">Borrow</a>
-                                        </td>
-                                        </tr>
-                                        </table>*@
-
-                                    <h5>Core : @bookcore.Cores.CoreName</h5>
-                                    <h5>Available Copies : @bookcore.Copies</h5>
-                                    <a class="btn btn-primary mx-1" style="width:50%;" asp-action="Borrow" asp-route-id="@bookcore.BookCoreid">Borrow</a>
-                                }
+                            @foreach (var bookcore in Model.BookCores)
+                            {
+                                <h5>Core : @bookcore.Cores.CoreName</h5>
+                                <a asp-controller="Home" asp-action="BookCores" asp-route-id="@bookcore.BookCoreid"
+                               class="btn btn-primary mx-2"> @bookcore.Cores.CoreName</a>
+                                <h5>Available Copies : @bookcore.Copies</h5>
+                                <a class="btn btn-primary mx-1" style="width:50%;" asp-action="Borrow" asp-route-id="@bookcore.BookCoreid">Borrow</a>
+                            }
                         </div>
                     </div>
                     <div class="col-12 col-lg-3 offset-lg-1 text-center">

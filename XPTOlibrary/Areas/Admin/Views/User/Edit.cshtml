@@ -1,19 +1,24 @@
-﻿@model XPTOlibrary.Models.Author
-<form method="post" asp-action="Reactivate">
-    <input asp-for="AuthorId" hidden />
+﻿@model XPTOlibrary.Models.ViewModels.UserRolesVM;
+<form method="post" asp-action="Edit">
+    <input asp-for="UserId" hidden />
     <div class="border p-3 mt-4">
         <div class="row pb-2">
-            <h2 class="text-primary">Eidt Author</h2>
+            <h2 class="text-primary">Eidt Topic</h2>
             <hr />
         </div>
         @*<div asp-validation-summary="All"></div>*@
         <div class="mb-3">
-            <label asp-for="AuthorName"></label>
-            <input asp-for="AuthorName" class="form-control" />
-            <span asp-validation-for="AuthorName" class="text-danger"></span>
+            <label asp-for="Name"></label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+                <div class="mb-3">
+            <label asp-for="Birthday"></label>
+            <input asp-for="Birthday" class="form-control" />
+            <span asp-validation-for="Birthday" class="text-danger"></span>
         </div>
         <button type="submit" class="btn btn-primary" style="width:150px">Update</button>
-        <a asp-controller="Author" asp-action="Index" class="btn btn-secondary" style="width:150px">
+        <a asp-controller="User" asp-action="Index" class="btn btn-secondary" style="width:150px">
             Back to List
         </a>
     </div>

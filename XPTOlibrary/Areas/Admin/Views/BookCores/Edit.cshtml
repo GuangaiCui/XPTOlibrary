@@ -9,12 +9,12 @@
         @*<div asp-validation-summary="All"></div>*@
         <div class="mb-3">
             <label asp-for="BookISBN"></label>
-            <input asp-for="BookISBN" class="form-control" />
+            <p>@Model.BookInformation.BookName</p>
             <span asp-validation-for="BookISBN" class="text-danger"></span>
         </div>
                 <div class="mb-3">
             <label asp-for="CoreId"></label>
-            <input asp-for="CoreId" class="form-control" />
+            <p>@Model.Cores.CoreName</p>
             <span asp-validation-for="CoreId" class="text-danger"></span>
         </div>
                 <div class="mb-3">
@@ -23,7 +23,7 @@
             <span asp-validation-for="Copies" class="text-danger"></span>
         </div>
         <button type="submit" class="btn btn-primary" style="width:150px">Update</button>
-        <a asp-controller="Author" asp-action="Index" class="btn btn-secondary" style="width:150px">
+        <a asp-controller="BookCores" asp-action="Index" class="btn btn-secondary" style="width:150px">
             Back to List
         </a>
     </div>

@@ -25,7 +25,7 @@ namespace XPTOlibrary.Controllers
         public async Task< IActionResult> Index()
         {
             var users = _userManager.Users.ToList();
-            List<UserRolesVM> userRolesVM = new List<UserRolesVM>();
+            List<UserRolesVM> userRolesVMList = new List<UserRolesVM>();
             foreach(ApplicationUser user in users)
             {
                 var thisVM= new UserRolesVM();
@@ -35,72 +35,85 @@ namespace XPTOlibrary.Controllers
                 thisVM.Birthday = user.Birthday;
                 thisVM.Status=user.Status;
                 thisVM.Roles =await GetUserRoles(user);
-                userRolesVM.Add(thisVM);
+                userRolesVMList.Add(thisVM);
             }
-            return View(userRolesVM);
+            return View(userRolesVMList);
         }
         private async Task<List<string>> GetUserRoles(ApplicationUser user)
         {
             return new List<string>(await _userManager.GetRolesAsync(user));
         }
 
-
-        public IActionResult Edit(int? id)
+        
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Reactivate(string id)
         {
-            if(id == null|| id == 0)
+            //List<UserRolesVM> userRolesVMList = new List<UserRolesVM>();
+            //var user= userRolesVMList.FirstOrDefault(u=>u.UserId==id);
+            if (User.IsInRole(SD.Role_Admin))
+            {
+                ApplicationUser user = _unitOfWork.ApplicationUser.GetFirstOrDefault(u => u.Id == id);
+                user.Status = "Normal";
+                _unitOfWork.ApplicationUser.Update(user);
+                _unitOfWork.Save();
+                TempData["success"] = "User updated successfully";
+            }
+            TempData["error"] = "Only Admin could make this change";
+
+            return RedirectToAction("Index");
+        }
+
+        public async Task<IActionResult> Edit(string? id)
+        {
+            if (id == null)
             {
                 return NotFound();
             }
-            //var ApplicationUserFromDB = _unitOfWork.ApplicationUser.GetFirstOrDefault(x => x.ApplicationUserId == id);
-            return View();
+            ApplicationUser user = _unitOfWork.ApplicationUser.GetFirstOrDefault(x => x.Id == id);
+            UserRolesVM userRolesVM = new UserRolesVM()
+            {
+            UserId = user.Id,
+            UserName = user.UserName,
+            Name = user.Name,
+            Birthday = user.Birthday,
+            Status = user.Status,
+            Roles = await GetUserRoles(user)
+        };
+            return View(userRolesVM);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(ApplicationUser obj)
+        public IActionResult Edit(UserRolesVM userRolesVM)
         {
-            //var userId = _userManager.GetUserId;
             if (ModelState.IsValid)
             {
-                obj.Status = "Normal";
-                _unitOfWork.ApplicationUser.Update(obj);
+                ApplicationUser user = _unitOfWork.ApplicationUser.GetFirstOrDefault(x => x.Id == userRolesVM.UserId);
+                _unitOfWork.ApplicationUser.Update(user);
                 _unitOfWork.Save();
-                TempData["success"] = "ApplicationUser updated successfully";
+                TempData["success"] = "User updated successfully";
                 return RedirectToAction("Index");
             }
-            return View(obj);
+            return View(userRolesVM);
         }
-        public IActionResult Delete(int? id)
+
+
+        //POST
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(string? id)
         {
-            if (id == null || id == 0)
+            ApplicationUser user = _unitOfWork.ApplicationUser.GetFirstOrDefault(u => u.Id == id);
+            
+            if (id == null)
             {
                 return NotFound();
             }
-            //var ApplicationUserFromDbFirst = _unitOfWork.ApplicationUser.GetFirstOrDefault(u => u.ApplicationUserId == id);
 
-            //if (ApplicationUserFromDbFirst == null)
-            //{
-            //    return NotFound();
-            //}
-
-            return View();
-        }
-
-        //POST
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public IActionResult DeletePOST(int? id)
-        {
-            //var obj = _unitOfWork.ApplicationUser.GetFirstOrDefault(u => u.ApplicationUserId == id);
-            //if (obj == null)
-            //{
-            //    return NotFound();
-            //}
-
-            //_unitOfWork.ApplicationUser.Remove(obj);
-            //_unitOfWork.Save();
-            //TempData["success"] = "ApplicationUser deleted successfully";
+            _unitOfWork.ApplicationUser.Remove(user);
+            _unitOfWork.Save();
+            TempData["success"] = "User deleted successfully";
             return RedirectToAction("Index");
-
         }
     }
 }

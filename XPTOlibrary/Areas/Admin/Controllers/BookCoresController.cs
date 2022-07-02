@@ -21,21 +21,15 @@ namespace XPTOlibrary.Controllers
         }
         public IActionResult Index()
         {
-            IEnumerable<BookCores> objBookCoresList = _unitOfWork.BookCores.GetAll(includeProperties:"BookInformation,Cores");
+            IEnumerable<BookCores> objBookCoresList = _unitOfWork.BookCores.GetAll(includeProperties:"BookInformation,Cores").OrderBy(u=>u.BookISBN);
+            
             return View(objBookCoresList);
         }
-        //GET
+        //get
         public IActionResult Create()
 
         {
-            return View();
-        }
-        //POST
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Create(BookCores obj)
-        {
-            BookCoresVM BookCoresVM = new()
+            BookCoresVM bookCoresVM = new()
             {
                 BookCores = new(),
 
@@ -51,50 +45,23 @@ namespace XPTOlibrary.Controllers
                 }),
 
             };
+            return View(bookCoresVM);
+        }
+        //post
+        [HttpPost,ActionName("Create")]
+        [ValidateAntiForgeryToken]
+        public IActionResult CreatePOST(BookCoresVM bookCoresVM)
+        {
+            BookCores bookCores = new BookCores();
             if (ModelState.IsValid)
             {
-                _unitOfWork.BookCores.Add(obj);
+                bookCores = bookCoresVM.BookCores;
+                _unitOfWork.BookCores.Add(bookCores);
                 _unitOfWork.Save();
                 TempData["success"] = "BookCores added successfully";
                 return RedirectToAction("Index");
             }
-            return View(obj);
-        }
-        public IActionResult Upsert(int? id)
-        {
-            BookCoresVM BookCoresVM = new()
-            {
-                BookCores = new(),
-
-                BookList = _unitOfWork.BookInformation.GetAll().Select(i => new SelectListItem
-                {
-                    Text = i.BookName,
-                    Value = i.BookISBN.ToString()
-                }),
-                CoreList = _unitOfWork.Cores.GetAll().Select(i => new SelectListItem
-                {
-                    Text = i.CoreName,
-                    Value = i.CoreId.ToString()
-                }),
-
-            };
-
-            if (id == null || id == 0)
-            {
-                //create product
-                //ViewBag.CategoryList = CategoryList;
-                //ViewData["CoverTypeList"] = CoverTypeList;
-                return View(BookCoresVM);
-            }
-            else
-            {
-                BookCoresVM.BookCores = _unitOfWork.BookCores.GetFirstOrDefault(u => u.BookCoreid == id);
-                return View(BookCoresVM);
-
-                //update product
-            }
-
-
+            return View(bookCores);
         }
         //Get
         public IActionResult Edit(int? id)
@@ -104,7 +71,7 @@ namespace XPTOlibrary.Controllers
                 return NotFound();
             }
 
-            var BookCoresFromDB = _unitOfWork.BookCores.GetFirstOrDefault(x => x.BookCoreid == id);
+            var BookCoresFromDB = _unitOfWork.BookCores.GetFirstOrDefault(x => x.BookCoreid == id,includeProperties:"BookInformation,Cores");
             return View(BookCoresFromDB);
         }
         [HttpPost]
@@ -120,20 +87,16 @@ namespace XPTOlibrary.Controllers
             }
             return View(obj);
         }
+        //Get
         public IActionResult Delete(int? id)
         {
             if (id == null || id == 0)
             {
                 return NotFound();
             }
-            var BookCoresFromDbFirst = _unitOfWork.BookCores.GetFirstOrDefault(u => u.BookCoreid == id);
+            BookCores BookCoresFromDb = _unitOfWork.BookCores.GetFirstOrDefault(u => u.BookCoreid == id,includeProperties:"BookInformation,Cores");
 
-            if (BookCoresFromDbFirst == null)
-            {
-                return NotFound();
-            }
-
-            return View(BookCoresFromDbFirst);
+            return View(BookCoresFromDb);
         }
 
         //POST
@@ -141,7 +104,7 @@ namespace XPTOlibrary.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeletePOST(int? id)
         {
-            var obj = _unitOfWork.BookCores.GetFirstOrDefault(u => u.CoreId == id);
+            BookCores obj = _unitOfWork.BookCores.GetFirstOrDefault(u => u.BookCoreid == id);
             if (obj == null)
             {
                 return NotFound();
