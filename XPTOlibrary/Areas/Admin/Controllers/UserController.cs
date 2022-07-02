@@ -4,6 +4,8 @@ using XPTOlibrary.DataAccess.Repository.IRepository;
 using XPTOlibrary.Models;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity;
+using XPTOlibrary.Models.ViewModels;
+using XPTOlibrary.Utility;
 
 namespace XPTOlibrary.Controllers
 {
@@ -12,24 +14,35 @@ namespace XPTOlibrary.Controllers
     {
         private readonly IUnitofWork _unitOfWork;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
-        public UserController(IUnitofWork unitOfWork, UserManager<IdentityUser> userManager)
+        public UserController(IUnitofWork unitOfWork, UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager)
         {
             _unitOfWork = unitOfWork;
+            _roleManager = roleManager;
             _userManager = userManager;
         }
-        public IActionResult Index()
+        public async Task< IActionResult> Index()
         {
-            _userManager.GetUserId(User);
-            IEnumerable<ApplicationUser> objApplicationUserList = _unitOfWork.ApplicationUser.GetAll();
-            return View(objApplicationUserList);
+            var users = _userManager.Users.ToList();
+            List<UserRolesVM> userRolesVM = new List<UserRolesVM>();
+            foreach(ApplicationUser user in users)
+            {
+                var thisVM= new UserRolesVM();
+                thisVM.UserId=user.Id;
+                thisVM.UserName=user.UserName;
+                thisVM.Name=user.Name;
+                thisVM.Birthday = user.Birthday;
+                thisVM.Status=user.Status;
+                thisVM.Roles =await GetUserRoles(user);
+                userRolesVM.Add(thisVM);
+            }
+            return View(userRolesVM);
         }
-        //public IActionResult Index()
-        //{
-        //    var user = _userManager.Users;
-        //    return View(user.ToList());
-        //}
-        //GET
+        private async Task<List<string>> GetUserRoles(ApplicationUser user)
+        {
+            return new List<string>(await _userManager.GetRolesAsync(user));
+        }
 
 
         public IActionResult Edit(int? id)

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<XPTOlibrary.Models.ApplicationUser>;
+﻿@model List<XPTOlibrary.Models.ViewModels.UserRolesVM>;
 @{
     ViewData["Title"] = "Index";
 }
@@ -9,37 +9,35 @@
     <div class="row pt-4">
         <div class="col-6">
             <h2 class="text-primary">ApplicationUser List</h2>
-        </div>
-        <div class="col-6 text-end">
-            <a asp-controller="User" asp-action="Create" class="btn btn-primary">
-                <i class="bi bi-plus-circle"></i> &nbsp; Add New ApplicationUser
-            </a>
-        </div>
+
     </div>
     <br /><br />
 
     <table class="table table-bordered table-striped" style="width:100%">
         <thead>
-
+        <th>User Id</th>
         <th>User Name</th>
+        <th>User Role</th>
         <th>Birthday</th>
         <th>Status</th>
         <th></th>
 
         </thead>
         <tbody>
-            @foreach (var obj in Model)
+            @foreach (var user in Model)
             {
                 <tr>
-                    <td>@obj.Name</td>
-                    <td>@obj.Birthday</td>
-                    <td>@obj.Status</td>
+                    <td>@user.UserId</td>
+                    <td>@user.Name</td>
+                    <td>@string.Join(" , ", user.Roles.ToList())</td>
+                    <td>@user.Birthday</td>
+                    <td>@user.Status</td>
                     <td>
                         <div class="w-75 btn-group" role="group">
-                            @* <a asp-controller="ApplicationUser" asp-action="Edit" asp-route-id="@obj.ApplicationUserId"
-                                class="btn btn-primary mx-2"> <i class="bi bi-pencil-square"></i> Edit</a>
-                                <a asp-controller="ApplicationUser" asp-action="Delete" asp-route-id="@obj.ApplicationUserId"
-                                class="btn btn-danger mx-2"> <i class="bi bi-trash-fill"></i> Delete</a>*@
+                            <a asp-controller="User" asp-action="Reactivate" asp-route-id="@user.UserId"
+                                class="btn btn-primary mx-2"> <i class="bi bi-pencil-square"></i> edit</a>
+                                <a asp-controller="User" asp-action="Delete" asp-route-id="@user.UserId"
+                                class="btn btn-danger mx-2"> <i class="bi bi-trash-fill"></i> Delete</a>
                         </div>
                     </td>
                 </tr>
