@@ -10,6 +10,5 @@ namespace XPTOlibrary.Models.ViewModels
     {
         public BookInformation BookInformation { get; set; }
         public IEnumerable<BookCores> BookCores { get; set; }
-        //public BookCores BookCores { get; set; }
     }
 }

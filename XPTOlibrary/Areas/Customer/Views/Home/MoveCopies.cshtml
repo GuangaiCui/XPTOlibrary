@@ -1,0 +1,38 @@
+﻿@model XPTOlibrary.Models.ViewModels.MoveCopiesVM
+<form method="post" asp-action="Create">
+    <div class="border p-3 mt-4">
+        <div class="row pb-2">
+            <h2 class="text-primary">Add New Book to Cores</h2>
+            <hr />
+        </div>
+        @*<div asp-validation-summary="All"></div>*@
+		<div class="mb-3 col-6">
+			<label asp-for="BookCores.BookISBN"></label>
+            <p>@Model.BookCores.BookInformation.BookName</p>
+		</div>
+		<div class="mb-3 col-6">
+			<label asp-for="BookCores.CoreId"></label>
+			<select asp-for="BookCores.CoreId" asp-items="@Model.OriginCoreList" class="form-select">
+				<option disabled selected>--Select Core--</option>
+			</select>
+			<span asp-validation-for="BookCores.BookISBN" class="text-danger"></span>
+		</div>
+				<div class="mb-3 col-6">
+			<label asp-for="BookCores.CoreId"></label>
+			<select asp-for="BookCores.CoreId" asp-items="@Model.DestinationCoreList" class="form-select">
+				<option disabled selected>--Select Core--</option>
+			</select>
+			<span asp-validation-for="BookCores.BookISBN" class="text-danger"></span>
+		</div>
+
+        <button type="submit" class="btn btn-primary" style="width:150px">Create</button>
+        <a asp-controller="BookCores" asp-action="Index" class="btn btn-secondary" style="width:150px">
+            Back to List
+        </a>
+    </div>
+</form>
+@section Scripts{
+	@{
+		<partial name="_ValidationScriptsPartial" />
+	}
+	}

@@ -5,6 +5,7 @@ using XPTOlibrary.DataAccess.Repository.IRepository;
 using XPTOlibrary.Models;
 using XPTOlibrary.Models.ViewModels;
 using XPTOlibrary.Utility;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace XPTOlibrary.Controllers;
 [Area("Customer")]
@@ -91,7 +92,33 @@ public class HomeController : Controller
         }
         return RedirectToAction("Index");
     }
+    //Get
+    public IActionResult MoveCopies(int id)
+    {
+        MoveCopiesVM moveCopiesVM = new()
+        {
+            BookCores = _unitOfWork.BookCores.GetFirstOrDefault(u=>u.BookISBN==id,includeProperties:"BookInformation"),
 
+            OriginCoreList = _unitOfWork.BookCores.GetAll(includeProperties:"Cores").Select(i => new SelectListItem
+            {
+                Text = i.Cores.CoreName,
+                Value = i.CoreId.ToString()
+            }),
+            DestinationCoreList = _unitOfWork.BookCores.GetAll(includeProperties: "Cores").Select(i => new SelectListItem
+            {
+                Text = i.Cores.CoreName,
+                Value = i.CoreId.ToString()
+            }),
+
+        };
+        return View(moveCopiesVM);
+    }
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public IActionResult MoveCopies(BookCores bookCores)
+    {
+        return View(bookCores);
+    }
 
     public IActionResult Privacy()
     {

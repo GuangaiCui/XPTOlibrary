@@ -123,14 +123,12 @@ namespace XPTOlibrary.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
-                    //here for userstatus
-                    //IEnumerable <Bookcore> borrowRecord = _unitOfWork.BorrowRecord.GetAll(u => u.ApplicationUserId == userId);
-                    //string userid = _userManager.GetUserId(User);
+
                     var user = _unitOfWork.ApplicationUser.GetFirstOrDefault(u => u.UserName == Input.Email);
                     var roles = await _userManager.GetRolesAsync(user).ConfigureAwait(false);
 
                     IEnumerable<BorrowRecord> borrowRecords = _unitOfWork.BorrowRecord.GetAll(u => u.ApplicationUserId == user.Id).OrderByDescending(s => s.DateBorrow);
-                    BorrowRecord latestBorrowRecord = borrowRecords.First();
+                    
                     int delayedCount = 0;
                     
                     foreach (var role in roles)
@@ -138,13 +136,13 @@ namespace XPTOlibrary.Areas.Identity.Pages.Account
                         //an user might have multiple roles
                         if (role == SD.Role_User)
                         {
-                            if (latestBorrowRecord == null && user.RegisterTime.AddYears(1) > DateTime.Today)
+                            if (borrowRecords.First() == null && user.RegisterTime.AddYears(1) > DateTime.Today)
                             {
                                 break;
                             }
                             else
                             {
-                                if (user.RegisterTime.AddYears(1) < DateTime.Today || latestBorrowRecord.DateBorrow.AddYears(1) < DateTime.Today)
+                                if (user.RegisterTime.AddYears(1) < DateTime.Today || borrowRecords.First().DateBorrow.AddYears(1) < DateTime.Today)
                                 {
                                     user.Status = UserStatus.Status_Hibernate;
                                     _logger.LogInformation("User Hibernated.");
