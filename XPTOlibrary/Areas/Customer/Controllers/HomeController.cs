@@ -62,29 +62,6 @@ public class HomeController : Controller
             userId = _userManager.GetUserId(User);
 
 
-            //int countOfBorrowed = 0;
-            //IEnumerable<BorrowRecord> borrowRecord = _unitOfWork.BorrowRecord.GetAll(u => u.ApplicationUserId == userId);
-            //BookCores BookCores = _unitOfWork.BookCores.GetFirstOrDefault(u => u.BookCoreid == id);
-            //ApplicationUser applicationUser = null;
-            //foreach (var record in borrowRecord)
-            //{
-            //    if (record.DateReturn == null)
-            //    {
-            //        countOfBorrowed++;
-
-            //        if (countOfBorrowed == 4)
-            //        {
-            //            break;
-            //        }
-            //        return RedirectToAction("Index");
-            //    }
-            //}
-            //borrow failed
-            //alert("maximum of 4 books")
-            //if (record.DateBorrow.AddDays(15) > record.DateReturn || record.DateBorrow.AddDays(15) > DateTime.Today
-            //ApplicationUser applicationUser = _unitOfWork.ApplicationUser.GetFirstOrDefault(u => u.ApplicationUserId == userId);
-            //var user = UserManager.FindById(User.Identity.GetUserId());
-
 
             if (User.IsInRole(SD.Role_User)&&applicationUser.Status == "Normal")
             {

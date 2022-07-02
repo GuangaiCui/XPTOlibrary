@@ -32,7 +32,7 @@ namespace XPTOlibrary.Controllers
                 thisVM.UserId=user.Id;
                 thisVM.UserName=user.UserName;
                 thisVM.Name=user.Name;
-                thisVM.Birthday = user.Birthday;
+                thisVM.RegisterTime = user.RegisterTime;
                 thisVM.Status=user.Status;
                 thisVM.Roles =await GetUserRoles(user);
                 userRolesVMList.Add(thisVM);
@@ -76,7 +76,7 @@ namespace XPTOlibrary.Controllers
             UserId = user.Id,
             UserName = user.UserName,
             Name = user.Name,
-            Birthday = user.Birthday,
+            RegisterTime = user.RegisterTime,
             Status = user.Status,
             Roles = await GetUserRoles(user)
         };

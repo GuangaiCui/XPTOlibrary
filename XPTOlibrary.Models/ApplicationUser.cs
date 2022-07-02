@@ -15,7 +15,7 @@ namespace XPTOlibrary.Models
         [Required]
         public string Name { get; set; }
         [Column(TypeName = "Date")]
-        public DateTime? Birthday { get; set; }
+        public DateTime RegisterTime { get; set; }
         public string Status { get; set; }
     }
 }

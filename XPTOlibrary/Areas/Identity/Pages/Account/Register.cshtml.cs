@@ -107,7 +107,7 @@ namespace XPTOlibrary.Areas.Identity.Pages.Account
             public string ConfirmPassword { get; set; }
             [Required]
             public string Name  { get; set; }
-            public DateTime? Birthday { get; set; }
+            public DateTime RegisterTime { get; set; }
             public string? Role { get; set; }
             [ValidateNever]
             public IEnumerable<SelectListItem> RoleList { get; set; }
@@ -143,7 +143,7 @@ namespace XPTOlibrary.Areas.Identity.Pages.Account
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
                 user.Name = Input.Name;
-                user.Birthday = Input.Birthday;
+                user.RegisterTime = DateTime.Now;
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
                 if (result.Succeeded)

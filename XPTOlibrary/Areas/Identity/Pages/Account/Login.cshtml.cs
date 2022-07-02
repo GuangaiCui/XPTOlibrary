@@ -17,6 +17,7 @@ using Microsoft.Extensions.Logging;
 using XPTOlibrary.Models;
 using XPTOlibrary.DataAccess.Repository.IRepository;
 using XPTOlibrary.DataAccess.Repository;
+using XPTOlibrary.Utility;
 
 namespace XPTOlibrary.Areas.Identity.Pages.Account
 {
@@ -125,8 +126,42 @@ namespace XPTOlibrary.Areas.Identity.Pages.Account
                     //here for userstatus
                     //IEnumerable <Bookcore> borrowRecord = _unitOfWork.BorrowRecord.GetAll(u => u.ApplicationUserId == userId);
                     string userid = _userManager.GetUserId(User);
-                    IEnumerable<BorrowRecord> borrowRecords = _unitOfWork.BorrowRecord.GetAll(u => u.ApplicationUserId == userid).OrderByDescending(s=>s.DateBorrow);
+                    var user = _unitOfWork.ApplicationUser.GetFirstOrDefault(u => u.Id == userid);
+                    IEnumerable<BorrowRecord> borrowRecords = _unitOfWork.BorrowRecord.GetAll(u => u.ApplicationUserId == userid).OrderByDescending(s => s.DateBorrow);
+                    BorrowRecord latestBorrowRecord = borrowRecords.First();
+                    if (User.IsInRole(SD.Role_User))
+                    {
+                        if (latestBorrowRecord.DateBorrow.AddYears(1) < DateTime.Today)
+                        {
+                            user.Status = UserStatus.Status_Hibernate;
+                            _logger.LogInformation("User Hibernated.");
+                        }
+                        foreach (var record in borrowRecords)
+                        {
+                            //if()
+                        }
 
+
+            //int countOfBorrowed = 0;
+
+            //foreach (var record in borrowRecord)
+            //{
+            //    if (record.DateReturn == null)
+            //    {
+            //        countOfBorrowed++;
+
+                            //        if (countOfBorrowed == 4)
+                            //        {
+                            //            break;
+                            //        }
+                            //        return RedirectToAction("Index");
+                            //    }
+                            //}
+                            //borrow failed
+
+                            //if (record.DateBorrow.AddDays(15) > record.DateReturn || record.DateBorrow.AddDays(15) > DateTime.Today
+
+                    }
                     return LocalRedirect(returnUrl);
                 }
                 if (result.RequiresTwoFactor)
