@@ -1,5 +1,6 @@
 ﻿@model XPTOlibrary.Models.ViewModels.MoveCopiesVM
-<form method="post" asp-action="Create">
+<form method="post" asp-action="MoveCopies">
+	<input asp-for="BookCores.BookISBN" hidden />
     <div class="border p-3 mt-4">
         <div class="row pb-2">
             <h2 class="text-primary">Add New Book to Cores</h2>
@@ -8,26 +9,32 @@
         @*<div asp-validation-summary="All"></div>*@
 		<div class="mb-3 col-6">
 			<label asp-for="BookCores.BookISBN"></label>
-            <p>@Model.BookCores.BookInformation.BookName</p>
+            <p asp-for="BookCores.BookISBN">@Model.BookCores.BookInformation.BookName</p>
 		</div>
 		<div class="mb-3 col-6">
-			<label asp-for="BookCores.CoreId"></label>
-			<select asp-for="BookCores.CoreId" asp-items="@Model.OriginCoreList" class="form-select">
-				<option disabled selected>--Select Core--</option>
+			<label asp-for="OriginCoreId"></label>
+			<select asp-for="OriginCoreId" asp-items="@Model.OriginCoreList" class="form-select">
+				<option disabled selected>--Select OriginCore--</option>
 			</select>
-			<span asp-validation-for="BookCores.BookISBN" class="text-danger"></span>
+			<span asp-validation-for="OriginCoreId" class="text-danger"></span>
 		</div>
 				<div class="mb-3 col-6">
-			<label asp-for="BookCores.CoreId"></label>
-			<select asp-for="BookCores.CoreId" asp-items="@Model.DestinationCoreList" class="form-select">
-				<option disabled selected>--Select Core--</option>
+			<label asp-for="DestinationCoreId"></label>
+			<select asp-for="DestinationCoreId" asp-items="@Model.DestinationCoreList" class="form-select">
+				<option disabled selected>--Select DestinationCore--</option>
 			</select>
-			<span asp-validation-for="BookCores.BookISBN" class="text-danger"></span>
+			<span asp-validation-for="DestinationCoreId" class="text-danger"></span>
 		</div>
+		    <div class="mb-3">
+            <label asp-for="MoveCopies"></label>
+            <input asp-for="MoveCopies" class="form-control" />
+            <span asp-validation-for="MoveCopies"
+            class="text-danger"></span>
+        </div>
 
-        <button type="submit" class="btn btn-primary" style="width:150px">Create</button>
-        <a asp-controller="BookCores" asp-action="Index" class="btn btn-secondary" style="width:150px">
-            Back to List
+        <button asp-action="MoveCopies" type="submit" class="btn btn-primary" style="width:150px">Move</button>
+        <a asp-controller="Home" asp-action="MoveCopies" class="btn btn-secondary" style="width:150px">
+            Back to Details
         </a>
     </div>
 </form>

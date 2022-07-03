@@ -11,6 +11,9 @@ namespace XPTOlibrary.Models.ViewModels
     public class MoveCopiesVM
     {
         public BookCores BookCores { get; set; }
+        public int MoveCopies { get; set; }
+        public int OriginCoreId { get; set; }
+        public int DestinationCoreId { get; set; }
         [ValidateNever]
         public IEnumerable<SelectListItem> OriginCoreList { get; set; }
         [ValidateNever]

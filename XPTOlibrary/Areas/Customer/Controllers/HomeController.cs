@@ -52,19 +52,19 @@ public class HomeController : Controller
     }
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task< IActionResult>  Borrow(int id)
+    public async Task<IActionResult> Borrow(int id)
     {
         var userId = "";
-        ApplicationUser applicationUser = _unitOfWork.ApplicationUser.GetFirstOrDefault(u => u.Id == userId);
-        BookCores bookCores = _unitOfWork.BookCores.GetFirstOrDefault(u => u.BookCoreid == id, includeProperties: "BookInformation,Cores");
+        
 
         if (_signInManager.IsSignedIn(User))
         {
             userId = _userManager.GetUserId(User);
+            ApplicationUser applicationUser = _unitOfWork.ApplicationUser.GetFirstOrDefault(u => u.Id == userId);
+            BookCores bookCores = _unitOfWork.BookCores.GetFirstOrDefault(u => u.BookCoreid == id, includeProperties: "BookInformation,Cores");
 
 
-
-            if (User.IsInRole(SD.Role_User)&&applicationUser.Status == "Normal")
+            if (User.IsInRole(SD.Role_User) && applicationUser.Status == "Normal")
             {
                 if (bookCores.Copies > 1)
                 {
@@ -97,27 +97,65 @@ public class HomeController : Controller
     {
         MoveCopiesVM moveCopiesVM = new()
         {
-            BookCores = _unitOfWork.BookCores.GetFirstOrDefault(u=>u.BookISBN==id,includeProperties:"BookInformation"),
+            BookCores = new(),
+            MoveCopies = 1,
 
-            OriginCoreList = _unitOfWork.BookCores.GetAll(includeProperties:"Cores").Select(i => new SelectListItem
+            OriginCoreList = _unitOfWork.Cores.GetAll().Select(i => new SelectListItem
             {
-                Text = i.Cores.CoreName,
+                Text = i.CoreName,
                 Value = i.CoreId.ToString()
             }),
-            DestinationCoreList = _unitOfWork.BookCores.GetAll(includeProperties: "Cores").Select(i => new SelectListItem
+            DestinationCoreList = _unitOfWork.Cores.GetAll().Select(i => new SelectListItem
             {
-                Text = i.Cores.CoreName,
+                Text = i.CoreName,
                 Value = i.CoreId.ToString()
             }),
 
         };
+        moveCopiesVM.BookCores = _unitOfWork.BookCores.GetFirstOrDefault(u => u.BookISBN == id, includeProperties: "BookInformation,Cores");
         return View(moveCopiesVM);
     }
-    [HttpPost]
+    [HttpPost, ActionName("MoveCopies")]
     [ValidateAntiForgeryToken]
-    public IActionResult MoveCopies(BookCores bookCores)
+    public async Task< IActionResult> MoveCopiesPost(MoveCopiesVM moveCopiesVM)
     {
-        return View(bookCores);
+        BookCores originBookCores = _unitOfWork.BookCores.GetFirstOrDefault(u => u.BookISBN == moveCopiesVM.BookCores.BookISBN &&
+         u.CoreId == moveCopiesVM.OriginCoreId);
+        BookCores destinationBookCores = _unitOfWork.BookCores.GetFirstOrDefault(u => u.BookISBN == moveCopiesVM.BookCores.BookISBN &&
+        u.CoreId == moveCopiesVM.DestinationCoreId);
+
+        moveCopiesVM.BookCores = _unitOfWork.BookCores.GetFirstOrDefault(u => u.BookISBN == moveCopiesVM.BookCores.BookISBN, includeProperties: "BookInformation,Cores");
+        if (ModelState.IsValid)
+        {
+            if (moveCopiesVM.OriginCoreId == moveCopiesVM.DestinationCoreId|| originBookCores.Copies < 1 + moveCopiesVM.MoveCopies)
+            {
+                
+                moveCopiesVM.OriginCoreList = _unitOfWork.Cores.GetAll().Select(i => new SelectListItem
+                {
+                    Text = i.CoreName,
+                    Value = i.CoreId.ToString()
+                });
+                moveCopiesVM.DestinationCoreList = _unitOfWork.Cores.GetAll().Select(i => new SelectListItem
+                {
+                    Text = i.CoreName,
+                    Value = i.CoreId.ToString()
+                });
+                return View(moveCopiesVM);
+                TempData["error"] = "Can not move to the same core Or Not enough copies to move ";
+            }
+            else
+            {
+                originBookCores.Copies -= moveCopiesVM.MoveCopies;
+                destinationBookCores.Copies += moveCopiesVM.MoveCopies;
+                _unitOfWork.BookCores.Update(originBookCores);
+                _unitOfWork.BookCores.Update(destinationBookCores);
+
+                _unitOfWork.Save();
+                TempData["success"] = "Book moved successfully";
+                return RedirectToAction("Details", new { id = moveCopiesVM.BookCores.BookISBN });
+            }
+        }
+        return RedirectToAction("Details", new { id = moveCopiesVM.BookCores.BookISBN });
     }
 
     public IActionResult Privacy()

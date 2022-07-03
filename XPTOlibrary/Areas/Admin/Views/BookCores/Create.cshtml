@@ -8,7 +8,8 @@
         @*<div asp-validation-summary="All"></div>*@
 		<div class="mb-3 col-6">
 			<label asp-for="BookCores.BookISBN"></label>
-			<select asp-for="BookCores.BookISBN" asp-items="@Model.BookList" class="form-select">
+			<select asp-for="BookCores.BookISBN
+" asp-items="@Model.BookList" class="form-select">
 				<option disabled selected>--Select Book--</option>
 			</select>
 			<span asp-validation-for="BookCores.BookISBN" class="text-danger"></span>

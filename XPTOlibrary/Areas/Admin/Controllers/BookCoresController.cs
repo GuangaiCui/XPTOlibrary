@@ -21,7 +21,7 @@ namespace XPTOlibrary.Controllers
         }
         public IActionResult Index()
         {
-            IEnumerable<BookCores> objBookCoresList = _unitOfWork.BookCores.GetAll(includeProperties:"BookInformation,Cores").OrderBy(u=>u.BookISBN);
+            IEnumerable<BookCores> objBookCoresList = _unitOfWork.BookCores.GetAll(includeProperties:"BookInformation,Cores").OrderBy(u=>u.BookISBN).ThenBy(u=>u.CoreId);
             
             return View(objBookCoresList);
         }
@@ -52,16 +52,41 @@ namespace XPTOlibrary.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult CreatePOST(BookCoresVM bookCoresVM)
         {
-            BookCores bookCores = new BookCores();
+            IEnumerable<BookCores> bookCoreList = _unitOfWork.BookCores.GetAll();
+            BookCores bookCore = new BookCores();
+            bookCore = bookCoresVM.BookCores;
             if (ModelState.IsValid)
             {
-                bookCores = bookCoresVM.BookCores;
-                _unitOfWork.BookCores.Add(bookCores);
+                foreach (BookCores core in bookCoreList)
+                {
+                    if (core.BookISBN == bookCore.BookISBN && core.CoreId == bookCore.CoreId)
+                    {
+                        TempData["error"] = "Already exist";
+                        bookCoresVM.BookList = _unitOfWork.BookInformation.GetAll().Select(i => new SelectListItem
+                        {
+                            Text = i.BookName,
+                            Value = i.BookISBN.ToString()
+                        });
+                        bookCoresVM.CoreList = _unitOfWork.Cores.GetAll().Select(i => new SelectListItem
+                        {
+                            Text = i.CoreName,
+                            Value = i.CoreId.ToString()
+                        });
+
+                        return View(bookCoresVM);
+                    }
+                }
+                if (bookCore.Copies < 1)
+                {
+                    TempData["error"] = "At least have one copy";
+                    return View(bookCoresVM);
+                }
+                _unitOfWork.BookCores.Add(bookCore);
                 _unitOfWork.Save();
                 TempData["success"] = "BookCores added successfully";
                 return RedirectToAction("Index");
             }
-            return View(bookCores);
+            return View(bookCore);
         }
         //Get
         public IActionResult Edit(int? id)
