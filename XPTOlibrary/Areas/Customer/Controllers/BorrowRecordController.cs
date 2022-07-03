@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using XPTOlibrary.DataAccess.Repository.IRepository;
@@ -8,6 +9,7 @@ using XPTOlibrary.Utility;
 
 namespace XPTOlibrary.Controllers;
 [Area("Customer")]
+[Authorize]
 public class BorrowRecordController : Controller
 {
     private readonly IUnitofWork _unitOfWork;

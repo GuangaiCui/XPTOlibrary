@@ -145,6 +145,8 @@ namespace XPTOlibrary.Areas.Identity.Pages.Account
                                 if (user.RegisterTime.AddYears(1) < DateTime.Today || borrowRecords.First().DateBorrow.AddYears(1) < DateTime.Today)
                                 {
                                     user.Status = UserStatus.Status_Hibernate;
+                                    _unitOfWork.ApplicationUser.Update(user);
+                                    _unitOfWork.Save();
                                     _logger.LogInformation("User Hibernated.");
 
                                 }
@@ -159,6 +161,8 @@ namespace XPTOlibrary.Areas.Identity.Pages.Account
                                             if (delayedCount == 4)
                                             {
                                                 user.Status = UserStatus.Status_Paused;
+                                                _unitOfWork.ApplicationUser.Update(user);
+                                                _unitOfWork.Save();
                                                 _logger.LogInformation("User Paused.");
                                                 break;
                                             }

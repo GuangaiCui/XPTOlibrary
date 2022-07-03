@@ -106,7 +106,6 @@ public class BookInformationController : Controller
 
             }
             if (_unitOfWork.BookInformation.GetFirstOrDefault(u => u.BookISBN == obj.BookInformation.BookISBN)==null)
-
             {
                 _unitOfWork.BookInformation.Add(obj.BookInformation);
             }
@@ -116,6 +115,7 @@ public class BookInformationController : Controller
             }
             _unitOfWork.Save();
             TempData["success"] = "BookInformation created successfully";
+
             return RedirectToAction("Index");
         }
         return View(obj);

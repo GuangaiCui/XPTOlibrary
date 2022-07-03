@@ -6,10 +6,13 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity;
 using XPTOlibrary.Models.ViewModels;
 using XPTOlibrary.Utility;
+using Microsoft.AspNetCore.Authorization;
 
 namespace XPTOlibrary.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = SD.Role_Admin)]
+
     public class UserController : Controller
     {
         private readonly IUnitofWork _unitOfWork;

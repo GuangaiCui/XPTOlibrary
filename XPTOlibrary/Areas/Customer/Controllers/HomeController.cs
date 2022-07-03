@@ -6,6 +6,7 @@ using XPTOlibrary.Models;
 using XPTOlibrary.Models.ViewModels;
 using XPTOlibrary.Utility;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Authorization;
 
 namespace XPTOlibrary.Controllers;
 [Area("Customer")]
@@ -22,7 +23,6 @@ public class HomeController : Controller
         _signInManager = signInManager;
         _userManager = userManager;
     }
-
     public IActionResult Index(string? searchString)
     {
         IEnumerable<BookInformation> BookInformationList;
@@ -39,6 +39,8 @@ public class HomeController : Controller
         return View(BookInformationList);
 
     }
+    [Authorize]
+
     public IActionResult Details(int id)
     {
         var BookInformations = _unitOfWork.BookInformation.GetFirstOrDefault(u => u.BookISBN == id, includeProperties: "Publisher,Author,Topic");
@@ -52,6 +54,8 @@ public class HomeController : Controller
     }
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(SD.Role_User)]
+
     public async Task<IActionResult> Borrow(int id)
     {
         var userId = "";
@@ -97,6 +101,7 @@ public class HomeController : Controller
         return RedirectToAction("Index");
     }
     //Get
+    [Authorize(SD.Role_Admin)]
     public IActionResult MoveCopies(int id)
     {
         MoveCopiesVM moveCopiesVM = new()
@@ -121,6 +126,7 @@ public class HomeController : Controller
     }
     [HttpPost, ActionName("MoveCopies")]
     [ValidateAntiForgeryToken]
+    [Authorize(SD.Role_Admin)]
     public async Task< IActionResult> MoveCopiesPost(MoveCopiesVM moveCopiesVM)
     {
         BookCores originBookCores = _unitOfWork.BookCores.GetFirstOrDefault(u => u.BookISBN == moveCopiesVM.BookCores.BookISBN &&

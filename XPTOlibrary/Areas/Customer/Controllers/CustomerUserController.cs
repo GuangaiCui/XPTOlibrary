@@ -6,10 +6,12 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity;
 using XPTOlibrary.Models.ViewModels;
 using XPTOlibrary.Utility;
+using Microsoft.AspNetCore.Authorization;
 
 namespace XPTOlibrary.Controllers
 {
     [Area("Customer")]
+    [Authorize]
     public class CustomerUserController : Controller
     {
         private readonly IUnitofWork _unitOfWork;

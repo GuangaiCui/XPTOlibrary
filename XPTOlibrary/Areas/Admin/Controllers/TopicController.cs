@@ -3,11 +3,14 @@ using XPTOlibrary.DataAccess;
 using XPTOlibrary.DataAccess.Repository.IRepository;
 using XPTOlibrary.Models;
 using System.Collections.Generic;
-
+using Microsoft.AspNetCore.Authorization;
+using XPTOlibrary.Utility;
 
 namespace XPTOlibrary.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = SD.Role_Admin)]
+
     public class TopicController : Controller
     {
         private readonly IUnitofWork _unitOfWork;
