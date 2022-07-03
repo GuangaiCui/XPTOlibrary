@@ -65,6 +65,15 @@ namespace XPTOlibrary.Controllers
         {
             if (ModelState.IsValid)
             {
+                IEnumerable<Author> authors = _unitOfWork.Author.GetAll();
+                foreach (Author author in authors)
+                {
+                    if (author.AuthorName == obj.AuthorName)
+                    {
+                        TempData["error"] = "Author already exist, id is" + author.AuthorId;
+                        return View(obj);
+                    }
+                }
                 _unitOfWork.Author.Update(obj);
                 _unitOfWork.Save();
                 TempData["success"] = "Author updated successfully";

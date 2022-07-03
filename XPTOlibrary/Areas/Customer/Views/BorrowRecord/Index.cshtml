@@ -18,12 +18,40 @@
         <div class="col-6 text-end">
         </div>
     </div>
+
     <br /><br />
+
+    @using (Html.BeginForm())
+    {
+        <div class="form-horizontal">
+            <label for="selectoption">Select Option:</label>
+            <select id="SelectOption" name="SelectOption">
+                @foreach(var core in Model){
+                <option value="@core.Cores.CoreId">@core.Cores.CoreName</option>
+                }
+            </select>
+            <div class="form-group form-group-sm">
+                <div class="col-md-8">
+                    @Html.TextBox("start", null, new { @class = "form-control datepicker" })
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <div class="col-md-8">
+                    @Html.TextBox("end", null, new { @class = "form-control datepicker" })
+                </div>
+            </div>
+            <div class="form-group-sm">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="filter" class="btn btn-default" /> <span> </span>
+                </div>
+            </div>
+        </div>
+    }
 
     <table class="table table-bordered table-striped" style="width:100%">
         <thead>
         <th>User Id</th>
-        @*<th>User Name</th>*@
+            @*<th>User Name</th>*@
         <th>BookName</th>
         <th>CoreName</th>
         <th>Time Borrowed</th>
@@ -32,57 +60,63 @@
         <th></th>
         </th>
         <tbody>
-            @foreach (var obj in Model)
-            {
+                @foreach (var obj in Model)
+                {
                 <tr>
                     <td>@obj.ApplicationUserId</td>
-                    @*<td>@obj.ApplicationUserName</td>*@
+                        @*<td>@obj.ApplicationUserName</td>*@
                     <td>@obj.BookInformation.BookName</td>
                     <td>@obj.Cores.CoreName</td>
                     <td>@obj.DateBorrow</td>
                     <td>@obj.DateReturn</td>
                     <td>
 
-                        @if (@obj.DateReturn == null)
-                        {
-                            @if (@obj.DateBorrow.AddDays(10) > DateTime.Today)
+                            @if (@obj.DateReturn == null)
                             {
-                                @Record_Borrowed
-                            }
-                            @if (@obj.DateBorrow.AddDays(10) < DateTime.Today && @obj.DateBorrow.AddDays(12) > DateTime.Today)
-                            {
-                                @Record_ReturnSoon
-                            }
-                            @if (@obj.DateBorrow.AddDays(12) < DateTime.Today && @obj.DateBorrow.AddDays(15) > DateTime.Today)
-                                @Record_Urgent
-                            @if (@obj.DateBorrow.AddDays(15) < DateTime.Today)
-                            {
-                                @Record_Delayed
-                            }
-
-                        }
-                        else
-                        
-                            @Record_Returned
-                        
-                    </td>
-                    <td>
-                         @if (@obj.DateReturn == null)
-                        {
-                         <form asp-action="Return" asp-route-id="@obj.RecordId">
-                        <input type="submit" value="Return" class="btn btn-danger" />
-                        </form>
+                                @if (@obj.DateBorrow.AddDays(10) > DateTime.Today)
+                                {
+                                    @Record_Borrowed
+                                }
+                                @if (@obj.DateBorrow.AddDays(10) < DateTime.Today && @obj.DateBorrow.AddDays(12) > DateTime.Today)
+                                {
+                                    @Record_ReturnSoon
+                                }
+                                @if (@obj.DateBorrow.AddDays(12) < DateTime.Today && @obj.DateBorrow.AddDays(15) > DateTime.Today)
+                                    @Record_Urgent
 
 
-                        }
+
+                                @if (@obj.DateBorrow.AddDays(15) < DateTime.Today)
+                                {
+                                    @Record_Delayed
+                                }
+
+                            }
+                            else
+
+                                @Record_Returned
+
+
+
+
+                        </td>
+                        <td>
+                                @if (@obj.DateReturn == null)
+                            {
+                            <form asp-action="Return" asp-route-id="@obj.RecordId">
+                                <input type="submit" value="Return" class="btn btn-danger" />
+                            </form>
+
+
+                            }
                     </td>
                 </tr>
-            }
+                }
         </tbody>
     </table>
-    </div>
+</div>
 @section Scripts{
 	@{
-		<partial name="_ValidationScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
 	}
 }

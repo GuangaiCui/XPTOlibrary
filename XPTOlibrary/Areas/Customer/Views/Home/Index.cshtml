@@ -4,11 +4,18 @@
 	<br />
 @using (Html.BeginForm())
 {
-	
-    <p>
+	<br>
+    <h5>
         @Html.TextBox("SearchString")  
-        <input type="submit" value="Search" /></p>
+        <input type="submit" value="Search" /></h5>
 }
+@*		<!-- Your Form -->
+@using(Html.BeginForm("Index", "Home", FormMethod.Post)){
+    <!-- Example of a Checked Checkbox -->
+    @Html.CheckBox("Example")
+    <input type="submit" value="Only show available books" />
+}*@
+
 	@foreach(var book in Model)
 	{
 		<div class="col-lg-3 col-md-6">

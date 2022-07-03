@@ -22,9 +22,14 @@ public class BorrowRecordController : Controller
 
     }
 
-    public IActionResult Index()
+    public IActionResult Index(int? SelectOption,DateTime? start, DateTime? end)
     {
+
+        if (!end.HasValue) end = DateTime.Now.Date;
         var userId = "";
+        
+        ViewBag.end = end;
+
         if (_signInManager.IsSignedIn(User))
         {
             userId = _userManager.GetUserId(User);
@@ -32,14 +37,21 @@ public class BorrowRecordController : Controller
         IEnumerable<BorrowRecord> BorrowRecordList;
         if (User.IsInRole(SD.Role_User))
         {
-            //var user = UserManager.FindById(User.Identity.GetUserId());
-
-            //var current_User = _userManager.GetUserAsync(HttpContext.User);
             BorrowRecordList = _unitOfWork.BorrowRecord.GetAll(u => u.ApplicationUserId == userId, includeProperties: "BookInformation,ApplicationUser,Cores").OrderByDescending(s=>s.DateBorrow);
+            if (!start.HasValue) start = BorrowRecordList.Last().DateBorrow;
+            ViewBag.start = start;
+            BorrowRecordList = BorrowRecordList.Where(x=>x.DateBorrow>start&&x.DateReturn<end).OrderByDescending(s=>s.DateReturn);
         }
         else
         {
-            BorrowRecordList = _unitOfWork.BorrowRecord.GetAll(includeProperties: "BookInformation,Cores");
+            BorrowRecordList = _unitOfWork.BorrowRecord.GetAll(includeProperties: "BookInformation,Cores").OrderByDescending(s => s.DateBorrow);
+            if (!start.HasValue) start = BorrowRecordList.Last().DateBorrow;
+            ViewBag.start = start;
+            BorrowRecordList = BorrowRecordList.Where(x => x.DateBorrow >= start && x.DateReturn <= end).OrderByDescending(s => s.DateReturn);
+        }
+        if (SelectOption != null)
+        {
+            BorrowRecordList = BorrowRecordList.Where(u => u.Cores.CoreId == SelectOption);
         }
 
         return View(BorrowRecordList);
