@@ -1,0 +1,42 @@
+﻿@model IEnumerable<XPTOlibrary.Models.BorrowRecord>
+@{
+    ViewData["Title"] = "Index";
+    int sumOfCopies = 0; 
+}
+
+<partial name="_Notification" />
+
+<div class="container p-3">
+    <div class="row pt-4">
+        <div class="col-6">
+            <h2 class="text-primary">Statistic Information</h2>
+        </div>
+        <div class="col-6 text-end">
+        </div>
+    </div>
+
+    <br /><br />
+
+
+    <table class="table table-bordered table-striped" style="width:100%">
+        <thead>
+        <th>No. of Books</th>
+        <th>No. of Cores</th>
+        <th>No. of Copies</th>
+        <th></th>
+        </th>
+        <tbody>
+
+            <tr>
+                <td>@ViewData["NoOfBooks"]</td>
+                <td>@ViewData["NoOfCores"]</td>
+                <td>@ViewData["NoOfCopies"]</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+@section Scripts{
+	@{
+    <partial name="_ValidationScriptsPartial" />
+	}
+}

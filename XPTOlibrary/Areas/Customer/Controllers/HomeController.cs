@@ -61,31 +61,35 @@ public class HomeController : Controller
         {
             userId = _userManager.GetUserId(User);
             ApplicationUser applicationUser = _unitOfWork.ApplicationUser.GetFirstOrDefault(u => u.Id == userId);
-            BookCores bookCores = _unitOfWork.BookCores.GetFirstOrDefault(u => u.BookCoreid == id, includeProperties: "BookInformation,Cores");
+            BookCores bookCore = _unitOfWork.BookCores.GetFirstOrDefault(u => u.BookCoreid == id, includeProperties: "BookInformation,Cores");
 
 
             if (User.IsInRole(SD.Role_User) && applicationUser.Status == "Normal")
             {
-                if (bookCores.Copies > 1)
-                {
-                    bookCores.Copies -= 1;
-                    //borrow succeed
-
-                    BorrowRecord borrowRecord = new BorrowRecord()
+                IEnumerable<BorrowRecord> borrowRecords=_unitOfWork.BorrowRecord.GetAll(u=>u.ApplicationUserId == userId&&u.DateReturn==null);
+                if (borrowRecords.Count() <= 4) {
+                    if (bookCore.Copies > 1)
                     {
-                        BookISBN = bookCores.BookISBN,
-                        ApplicationUserId = userId,
-                        CoreId = bookCores.CoreId,
-                        DateBorrow = DateTime.Now,
-                        DateReturn = null
-                    };
-                    _unitOfWork.BorrowRecord.Add(borrowRecord);
-                    _unitOfWork.Save();
-                    TempData["sucess"] = "Borrow succeed!";
+                        bookCore.Copies -= 1;
+                        //borrow succeed
+                        _unitOfWork.BookCores.Update(bookCore);
+                        BorrowRecord borrowRecord = new BorrowRecord()
+                        {
+                            BookISBN = bookCore.BookISBN,
+                            ApplicationUserId = userId,
+                            CoreId = bookCore.CoreId,
+                            DateBorrow = DateTime.Now,
+                            DateReturn = null
+                        };
+
+                        _unitOfWork.BorrowRecord.Add(borrowRecord);
+                        _unitOfWork.Save();
+                        TempData["sucess"] = "Borrow succeed!";
+                    }
                 }
                 else
                 {
-                    TempData["failed"] = "Borrow failed";
+                    TempData["error"] = "Borrow failed";
                 }
             }
 

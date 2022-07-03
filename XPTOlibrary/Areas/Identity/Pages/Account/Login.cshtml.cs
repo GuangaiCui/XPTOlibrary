@@ -136,7 +136,7 @@ namespace XPTOlibrary.Areas.Identity.Pages.Account
                         //an user might have multiple roles
                         if (role == SD.Role_User)
                         {
-                            if (borrowRecords.First() == null && user.RegisterTime.AddYears(1) > DateTime.Today)
+                            if (borrowRecords == null || user.RegisterTime.AddYears(1) > DateTime.Today)
                             {
                                 break;
                             }

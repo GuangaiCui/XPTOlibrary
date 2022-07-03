@@ -22,39 +22,55 @@ public class BorrowRecordController : Controller
 
     }
 
-    public IActionResult Index(int? SelectOption,DateTime? start, DateTime? end)
+    public IActionResult Index(int? SelectOption, DateTime? start, DateTime? end)
     {
 
-        if (!end.HasValue) end = DateTime.Now.Date;
+        if (!end.HasValue) end = DateTime.Now;
         var userId = "";
-        
+
         ViewBag.end = end;
 
         if (_signInManager.IsSignedIn(User))
         {
             userId = _userManager.GetUserId(User);
         }
-        IEnumerable<BorrowRecord> BorrowRecordList;
+        IEnumerable<BorrowRecord> borrowRecordLists = _unitOfWork.BorrowRecord.GetAll(includeProperties: "BookInformation,ApplicationUser,Cores").OrderByDescending(s => s.DateBorrow);
+        IEnumerable<BorrowRecord> BorrowRecordListsByUser = _unitOfWork.BorrowRecord.GetAll(u => u.ApplicationUserId == userId, includeProperties: "BookInformation,ApplicationUser,Cores").OrderByDescending(s => s.DateBorrow);
         if (User.IsInRole(SD.Role_User))
         {
-            BorrowRecordList = _unitOfWork.BorrowRecord.GetAll(u => u.ApplicationUserId == userId, includeProperties: "BookInformation,ApplicationUser,Cores").OrderByDescending(s=>s.DateBorrow);
-            if (!start.HasValue) start = BorrowRecordList.Last().DateBorrow;
-            ViewBag.start = start;
-            BorrowRecordList = BorrowRecordList.Where(x=>x.DateBorrow>start&&x.DateReturn<end).OrderByDescending(s=>s.DateReturn);
+            if (BorrowRecordListsByUser.Count() == 0)
+            {
+                start = borrowRecordLists.Last().DateBorrow;
+                ViewBag.start = start;
+                BorrowRecordListsByUser = BorrowRecordListsByUser.Where(x => x.DateBorrow >= start && x.DateBorrow <= end).OrderByDescending(s => s.DateReturn);
+            }
+            else
+            {
+                if (!start.HasValue) start = BorrowRecordListsByUser.Last().DateBorrow;
+                ViewBag.start = start;
+                BorrowRecordListsByUser = BorrowRecordListsByUser.Where(x => x.DateBorrow >= start && x.DateBorrow <= end).OrderByDescending(s => s.DateReturn);
+            }
+            if (SelectOption != null)
+            {
+                BorrowRecordListsByUser = BorrowRecordListsByUser.Where(u => u.Cores.CoreId == SelectOption);
+            }
+
+            return View(BorrowRecordListsByUser);
         }
+        //admin
         else
         {
-            BorrowRecordList = _unitOfWork.BorrowRecord.GetAll(includeProperties: "BookInformation,Cores").OrderByDescending(s => s.DateBorrow);
-            if (!start.HasValue) start = BorrowRecordList.Last().DateBorrow;
+            if (!start.HasValue) start = borrowRecordLists.Last().DateBorrow;
             ViewBag.start = start;
-            BorrowRecordList = BorrowRecordList.Where(x => x.DateBorrow >= start && x.DateReturn <= end).OrderByDescending(s => s.DateReturn);
-        }
-        if (SelectOption != null)
-        {
-            BorrowRecordList = BorrowRecordList.Where(u => u.Cores.CoreId == SelectOption);
+            borrowRecordLists = borrowRecordLists.Where(x => x.DateBorrow >= start && x.DateReturn <= end).OrderByDescending(s => s.DateReturn);
         }
 
-        return View(BorrowRecordList);
+        if (SelectOption != null)
+        {
+            borrowRecordLists = borrowRecordLists.Where(u => u.Cores.CoreId == SelectOption);
+        }
+
+        return View(borrowRecordLists);
 
     }
     [HttpPost]
@@ -64,7 +80,7 @@ public class BorrowRecordController : Controller
         var userId = "";
         BorrowRecord borrowRecord;
         borrowRecord = _unitOfWork.BorrowRecord.GetFirstOrDefault(u => u.RecordId == id);
-        BookCores bookcore = _unitOfWork.BookCores.GetFirstOrDefault(u=>u.BookISBN == borrowRecord.BookISBN&&u.CoreId==borrowRecord.CoreId);
+        BookCores bookcore = _unitOfWork.BookCores.GetFirstOrDefault(u => u.BookISBN == borrowRecord.BookISBN && u.CoreId == borrowRecord.CoreId);
         if (_signInManager.IsSignedIn(User))
         {
             userId = _userManager.GetUserId(User);
@@ -82,7 +98,7 @@ public class BorrowRecordController : Controller
         {
             TempData["error"] = "Please login first";
         }
-        
+
         return RedirectToAction("Index");
     }
 }
