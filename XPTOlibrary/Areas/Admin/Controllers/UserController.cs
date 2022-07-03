@@ -54,12 +54,38 @@ namespace XPTOlibrary.Controllers
             if (User.IsInRole(SD.Role_Admin))
             {
                 ApplicationUser user = _unitOfWork.ApplicationUser.GetFirstOrDefault(u => u.Id == id);
-                user.Status = "Normal";
+                user.Status = UserStatus.Status_Normal;
                 _unitOfWork.ApplicationUser.Update(user);
                 _unitOfWork.Save();
                 TempData["success"] = "User updated successfully";
             }
             TempData["error"] = "Only Admin could make this change";
+
+            return RedirectToAction("Index");
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Hibernate(string id)
+        {
+            //List<UserRolesVM> userRolesVMList = new List<UserRolesVM>();
+            //var user= userRolesVMList.FirstOrDefault(u=>u.UserId==id);
+            if (_userManager.GetUserId(User)==id)
+            {
+                ApplicationUser user = _unitOfWork.ApplicationUser.GetFirstOrDefault(u => u.Id == id);
+                user.Status = UserStatus.Status_Hibernate;
+                IEnumerable<BorrowRecord> borrowRecords = _unitOfWork.BorrowRecord.GetAll(u=>u.ApplicationUserId==id);
+                foreach (BorrowRecord record in borrowRecords)
+                {
+                    if (record.DateReturn == null)
+                    {
+                        record.DateBorrow = DateTime.Now;
+                        _unitOfWork.BorrowRecord.Update(record);
+                    }
+                }
+                _unitOfWork.ApplicationUser.Update(user);
+                _unitOfWork.Save();
+                TempData["success"] = "User hibernated successfully";
+            }
 
             return RedirectToAction("Index");
         }

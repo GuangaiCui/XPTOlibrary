@@ -34,10 +34,19 @@ namespace XPTOlibrary.Controllers
         {
             if (ModelState.IsValid)
             {
+                IEnumerable<Author> authors = _unitOfWork.Author.GetAll();
+                foreach (Author author in authors)
+                {
+                    if (author.AuthorName == obj.AuthorName)
+                    {
+                        TempData["error"] = "Author already exist, id is" + author.AuthorId;
+                        return View(obj);
+                    }
+                }
                 _unitOfWork.Author.Add(obj);
                 _unitOfWork.Save();
                 TempData["success"] = "Author added successfully";
-                return RedirectToAction("Index");
+                return RedirectToAction("Index","Author");
             }
             return View(obj);
         }

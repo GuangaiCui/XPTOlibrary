@@ -1,0 +1,54 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using XPTOlibrary.Utility
+@model XPTOlibrary.Models.ViewModels.UserRolesVM;
+
+@inject SignInManager<IdentityUser> SignInManager;
+@inject UserManager<IdentityUser> UserManager;
+@{
+    ViewData["Title"] = "Index";
+}
+
+<partial name="_Notification" />
+
+<div class="container p-3">
+    <div class="row pt-4">
+        <div class="col-6">
+            <h2 class="text-primary">ApplicationUser List</h2>
+
+        </div>
+        <br /><br />
+
+        <table class="table table-bordered table-striped" style="width:100%">
+            <thead>
+            <th>User Id</th>
+            <th>User Name</th>
+            <th>User Role</th>
+            <th>RegisterTime</th>
+            <th>Status</th>
+            <th></th>
+
+            </thead>
+            <tbody>
+                    <tr>
+                        <td>@Model.UserId</td>
+                        <td>@Model.Name</td>
+                        <td>@string.Join(" , ", Model.Roles.ToList())</td>
+                        <td>@Model.RegisterTime</td>
+                        <td>@Model.Status</td>
+                        <td>
+                            @if (SignInManager.IsSignedIn(User) && UserManager.GetUserId(User) == @Model.UserId)
+                            {
+                                <div class="w-75 btn-group" role="group">
+                                    <form asp-action="Hibernate" asp-route-id="@Model.UserId">
+                                        <input type="submit" value="Hibernate" class="btn btn-primary mx-2" />
+                                    </form>
+                                </div>
+                            }
+
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>

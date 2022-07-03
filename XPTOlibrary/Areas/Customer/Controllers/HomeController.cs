@@ -80,6 +80,7 @@ public class HomeController : Controller
                         DateReturn = null
                     };
                     _unitOfWork.BorrowRecord.Add(borrowRecord);
+                    _unitOfWork.Save();
                     TempData["sucess"] = "Borrow succeed!";
                 }
                 else
@@ -88,7 +89,6 @@ public class HomeController : Controller
                 }
             }
 
-            _unitOfWork.Save();
         }
         return RedirectToAction("Index");
     }

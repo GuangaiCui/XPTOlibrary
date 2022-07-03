@@ -4,7 +4,7 @@
 
 @inject SignInManager<IdentityUser> SignInManager;
 @inject UserManager<IdentityUser> UserManager;
-<form method="post" asp-action="Borrow">
+
     <input hidden asp-for="BookInformation.BookISBN" />
     <div class="card  container pt-4">
         <div class="card-header bg-primary text-light ml-0  row ">
@@ -45,7 +45,7 @@
                 </div>
                 @if (SignInManager.IsSignedIn(User)&&User.IsInRole(SD.Role_Admin))
                 {
-                        <div class="w-75 btn-group" role="group">
+                        <div class="col-12 col-md-6 pb-1" role="group">
                             <a asp-controller="Home" asp-action="MoveCopies" asp-route-id="@Model.BookInformation.BookISBN"
                            class="btn btn-primary mx-2"> Move Copies</a>
 
@@ -56,4 +56,3 @@
             </div>
         </div>
     </div>
-</form>

@@ -56,15 +56,15 @@ public class BorrowRecordController : Controller
         if (_signInManager.IsSignedIn(User))
         {
             userId = _userManager.GetUserId(User);
-            if(userId == borrowRecord.ApplicationUserId||User.IsInRole(SD.Role_Admin))
+            if (userId == borrowRecord.ApplicationUserId || User.IsInRole(SD.Role_Admin))
             {
                 borrowRecord.DateReturn = DateTime.Now;
                 bookcore.Copies += 1;
                 _unitOfWork.Save();
                 TempData["success"] = "Returned successfully";
             }
-            TempData["error"] = "Return failed";
-            
+            else
+                TempData["error"] = "Return failed";
         }
         else
         {

@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using XPTOlibrary.DataAccess.Repository.IRepository;
+using XPTOlibrary.Models;
+using XPTOlibrary.Utility;
 
 namespace XPTOlibrary.Areas.Identity.Pages.Account.Manage
 {
@@ -16,13 +19,16 @@ namespace XPTOlibrary.Areas.Identity.Pages.Account.Manage
     {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly IUnitofWork _unitOfWork;
 
         public IndexModel(
             UserManager<IdentityUser> userManager,
-            SignInManager<IdentityUser> signInManager)
+            SignInManager<IdentityUser> signInManager,
+            IUnitofWork unitofWork)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _unitOfWork = unitofWork;
         }
 
         /// <summary>
@@ -81,6 +87,7 @@ namespace XPTOlibrary.Areas.Identity.Pages.Account.Manage
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
+
             await LoadAsync(user);
             return Page();
         }
@@ -108,6 +115,23 @@ namespace XPTOlibrary.Areas.Identity.Pages.Account.Manage
                     StatusMessage = "Unexpected error when trying to set phone number.";
                     return RedirectToPage();
                 }
+            }
+            ApplicationUser applicationUser = _unitOfWork.ApplicationUser.GetFirstOrDefault(u => u.Id == user.Id);
+            if (applicationUser.Status == UserStatus.Status_Normal)
+            {
+                applicationUser.Status = UserStatus.Status_Hibernate;
+                IEnumerable<BorrowRecord> borrowRecords = _unitOfWork.BorrowRecord.GetAll(u => u.ApplicationUserId == user.Id);
+                foreach (BorrowRecord record in borrowRecords)
+                {
+                    if (record.DateReturn == null)
+                    {
+                        record.DateBorrow = DateTime.Now;
+                        _unitOfWork.BorrowRecord.Update(record);
+                    }
+                }
+                _unitOfWork.ApplicationUser.Update(applicationUser);
+                _unitOfWork.Save();
+                TempData["success"] = "User hibernated successfully";
             }
 
             await _signInManager.RefreshSignInAsync(user);

@@ -31,6 +31,9 @@
                         <li>
                             <a class="nav-link " asp-area="Customer" asp-controller="BorrowRecord" asp-action="Index">Borrow Record</a>
                         </li>
+                                                <li>
+                            <a class="nav-link " asp-area="Customer" asp-controller="CustomerUser" asp-action="Index">User Set</a>
+                        </li>
                             @if (User.IsInRole(SD.Role_Admin))
                             {
                             <li class="nav-item dropdown">

@@ -1,4 +1,9 @@
-﻿@model List<XPTOlibrary.Models.ViewModels.UserRolesVM>;
+﻿@using Microsoft.AspNetCore.Identity
+@using XPTOlibrary.Utility
+@model List<XPTOlibrary.Models.ViewModels.UserRolesVM>;
+
+@inject SignInManager<IdentityUser> SignInManager;
+@inject UserManager<IdentityUser> UserManager;
 @{
     ViewData["Title"] = "Index";
 }
@@ -34,19 +39,31 @@
                         <td>@user.RegisterTime</td>
                         <td>@user.Status</td>
                         <td>
-                            <div class="w-75 btn-group" role="group">
-                        <form asp-action="Reactivate" asp-route-id="@user.UserId">
-                        <input type="submit" value="Reactivate" class="btn btn-primary mx-2" />
-                        </form>
-                            </div>
+                            @if (User.IsInRole(SD.Role_Admin) && @user.Status != UserStatus.Status_Paused)
+                            {
+                                <div class="w-75 btn-group" role="group">
+                                    <form asp-action="Reactivate" asp-route-id="@user.UserId">
+                                        <input type="submit" value="Reactivate" class="btn btn-primary mx-2" />
+                                    </form>
+                                </div>
+                            }
+@*                            @if (SignInManager.IsSignedIn(User) && UserManager.GetUserId(User) == @user.UserId)
+                            {
+                                <div class="w-75 btn-group" role="group">
+                                    <form asp-action="Hibernate" asp-route-id="@user.UserId">
+                                        <input type="submit" value="Hibernate" class="btn btn-primary mx-2" />
+                                    </form>
+                                </div>
+                            }*@
+
                         </td>
                         <td>
                             <div class="w-75 btn-group" role="group">
                                 <a asp-controller="User" asp-action="Edit" asp-route-id="@user.UserId"
                                class="btn btn-primary mx-2">  Edit</a>
-                        <form asp-action="Delete" asp-route-id="@user.UserId">
-                        <input type="submit" value="Delete" class="btn btn-danger mx-2" />
-                        </form>
+                                <form asp-action="Delete" asp-route-id="@user.UserId">
+                                    <input type="submit" value="Delete" class="btn btn-danger mx-2" />
+                                </form>
                             </div>
                         </td>
                     </tr>
