@@ -36,7 +36,16 @@ namespace XPTOlibrary.Controllers
         {
             if (ModelState.IsValid)
             {
-                _unitOfWork.Publisher.Add(obj);
+                IEnumerable<Publisher> publishers = _unitOfWork.Publisher.GetAll();
+                foreach (Publisher publisher in publishers)
+                {
+                    if (publisher.PublisherName == obj.PublisherName)
+                    {
+                        TempData["error"] = "Publisher already exist, id is" + publisher.PublisherId;
+                        return View(obj);
+                    }
+                }
+                    _unitOfWork.Publisher.Add(obj);
                 _unitOfWork.Save();
                 TempData["success"] = "Publisher added successfully";
                 return RedirectToAction("Index");

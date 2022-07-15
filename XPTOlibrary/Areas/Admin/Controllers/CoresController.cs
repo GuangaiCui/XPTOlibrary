@@ -34,9 +34,19 @@ namespace XPTOlibrary.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(Cores obj)
         {
+
             if (ModelState.IsValid)
             {
-                _unitOfWork.Cores.Add(obj);
+                IEnumerable<Cores> cores = _unitOfWork.Cores.GetAll();
+                foreach (Cores core in cores)
+                {
+                    if (core.CoreName == obj.CoreName)
+                    {
+                        TempData["error"] = "Core already exist, id is" + core.CoreId;
+                        return View(obj);
+                    }
+                }
+                    _unitOfWork.Cores.Add(obj);
                 _unitOfWork.Save();
                 TempData["success"] = "Cores added successfully";
                 return RedirectToAction("Index");

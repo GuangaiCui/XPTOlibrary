@@ -39,7 +39,7 @@
                         <td>@user.RegisterTime</td>
                         <td>@user.Status</td>
                         <td>
-                            @if (User.IsInRole(SD.Role_Admin) && @user.Status != UserStatus.Status_Paused)
+                            @if (User.IsInRole(SD.Role_Admin) && (@user.Status == UserStatus.Status_Paused||@user.Status==UserStatus.Status_Hibernate))
                             {
                                 <div class="w-75 btn-group" role="group">
                                     <form asp-action="Reactivate" asp-route-id="@user.UserId">

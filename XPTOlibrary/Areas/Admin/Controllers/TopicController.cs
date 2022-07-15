@@ -37,7 +37,16 @@ namespace XPTOlibrary.Controllers
         {
             if (ModelState.IsValid)
             {
-                _unitOfWork.Topic.Add(obj);
+                IEnumerable<Topic> topics = _unitOfWork.Topic.GetAll();
+                foreach (Topic topic in topics)
+                {
+                    if (topic.TopicName == obj.TopicName)
+                    {
+                        TempData["error"] = "Topic already exist, id is" + topic.TopicId;
+                        return View(obj);
+                    }
+                }
+                    _unitOfWork.Topic.Add(obj);
                 _unitOfWork.Save();
                 TempData["success"] = "Topic added successfully";
                 return RedirectToAction("Index");

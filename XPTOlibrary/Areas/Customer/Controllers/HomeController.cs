@@ -54,7 +54,7 @@ public class HomeController : Controller
     }
     [HttpPost]
     [ValidateAntiForgeryToken]
-    [Authorize(SD.Role_User)]
+    [Authorize(Roles = SD.Role_User)]
 
     public async Task<IActionResult> Borrow(int id)
     {
@@ -68,7 +68,7 @@ public class HomeController : Controller
             BookCores bookCore = _unitOfWork.BookCores.GetFirstOrDefault(u => u.BookCoreid == id, includeProperties: "BookInformation,Cores");
 
 
-            if (User.IsInRole(SD.Role_User) && applicationUser.Status == "Normal")
+            if (applicationUser.Status == "Normal")
             {
                 IEnumerable<BorrowRecord> borrowRecords=_unitOfWork.BorrowRecord.GetAll(u=>u.ApplicationUserId == userId&&u.DateReturn==null);
                 if (borrowRecords.Count() <= 4) {
@@ -101,7 +101,7 @@ public class HomeController : Controller
         return RedirectToAction("Index");
     }
     //Get
-    [Authorize(SD.Role_Admin)]
+    [Authorize(Roles = SD.Role_Admin)]
     public IActionResult MoveCopies(int id)
     {
         MoveCopiesVM moveCopiesVM = new()
@@ -126,7 +126,7 @@ public class HomeController : Controller
     }
     [HttpPost, ActionName("MoveCopies")]
     [ValidateAntiForgeryToken]
-    [Authorize(SD.Role_Admin)]
+    [Authorize(Roles = SD.Role_Admin)]
     public async Task< IActionResult> MoveCopiesPost(MoveCopiesVM moveCopiesVM)
     {
         BookCores originBookCores = _unitOfWork.BookCores.GetFirstOrDefault(u => u.BookISBN == moveCopiesVM.BookCores.BookISBN &&
